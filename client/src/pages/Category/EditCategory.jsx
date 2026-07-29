@@ -27,7 +27,8 @@ const slugFormSchema = z.object({
 });
 
 const EditCategory = () => {
-  const { category_id } = useParams();
+  const { category_id } = useParams() || {};
+
   const [filePreview, setfilePreview] = useState();
   const [file, setfile] = useState();
 
@@ -36,8 +37,11 @@ const EditCategory = () => {
     loading,
     error,
   } = useAxios(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/show/${category_id}`,
-    { withCredentials: true }
+    category_id
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/show/${category_id}`
+      : null,
+    { withCredentials: true },
+    [category_id]
   );
 
   const router = useRouter();

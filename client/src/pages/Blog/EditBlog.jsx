@@ -40,32 +40,31 @@ const slugFormSchema = z.object({
     }),
   blogContent: z
     .string()
-    .min(3, { message: "Blog content must be at least 3 characters long." }), // Message fixed
+    .min(3, { message: "Blog content must be at least 3 characters long." }), 
 });
 
 const axiosOptions = { withCredentials: true };
 
 const EditBlog = () => {
-  const{edit_id} = useParams();
-  
+ const params = useParams();
+  const edit_id = params?.edit_id;
 
   const [filePreview, setfilePreview] = useState();
   const [file, setfile] = useState();
 
-    
+
+  const { data: blogData } = useAxios(
+    edit_id ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/edit/${edit_id}` : null,
+    axiosOptions,
+    [edit_id]
+  );
+
       const {
         data: categoryData,
       } = useAxios(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/all-category`,
         axiosOptions,
       );
-      const {
-        data: blogData, 
-      } = useAxios(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/edit/${edit_id}`,
-        axiosOptions, [edit_id]
-      );
-  
 
   const router = useRouter();
   const {
