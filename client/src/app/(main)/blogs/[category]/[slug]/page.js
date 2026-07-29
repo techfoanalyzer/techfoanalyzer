@@ -2,7 +2,8 @@ import { BlogPage, RelatedBlog } from "@/apiServices/BlogPage/BlogPage";
 import SingleBlogPage from "@/pages/Blog/SingleBlogPage";
 import { notFound } from "next/navigation";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://techfoanalyzer.com";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://techfoanalyzer.com";
 
 export async function generateMetadata({ params }) {
   const { slug, category } = await params;
@@ -10,7 +11,6 @@ export async function generateMetadata({ params }) {
   const blogResponse = await BlogPage(slug);
   const blog = blogResponse?.blog;
 
-  
   if (!blog) {
     return {
       title: "Blog Not Found | Techfo Analyzer",
@@ -19,20 +19,17 @@ export async function generateMetadata({ params }) {
   }
 
   // console.log(blog);
-  
 
   const rawDescription = blog?.blogContent
     ?.replace(/<[^>]*>/g, "")
     ?.trim()
     ?.slice(0, 160);
 
-
   const postUrl = `${SITE_URL}/blogs/${category ? `${category}/` : ""}${slug}`;
   const imageUrl = blog?.featureImage || `${SITE_URL}/default-blog.jpg`;
 
-    // console.log(postUrl);
-    // console.log(imageUrl);
-    
+  // console.log(postUrl);
+  // console.log(imageUrl);
 
   return {
     title: blog?.tittle || "Blog Post",
@@ -89,7 +86,6 @@ const blogDetailPage = async ({ params }) => {
 
   const Data = await BlogPage(slug);
 
-  // Safety Check: Blog data na milne par 404 page render hoga
   if (!Data || !Data.blog) {
     notFound();
   }
@@ -116,21 +112,24 @@ const blogDetailPage = async ({ params }) => {
     },
   };
 
-  return {
-   
-  } && (
-    <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <SingleBlogPage
-        blogData={Data}
-        related={RelatedData}
-        category={category}
-        slug={slug}
-      />
-    </main>
+  return (
+     (
+      <main>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      
+
+ <SingleBlogPage
+          blogData={Data}
+          related={RelatedData}
+          category={category}
+          slug={slug}
+        />
+       
+      </main>
+    )
   );
 };
 
