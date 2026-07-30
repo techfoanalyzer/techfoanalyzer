@@ -32,7 +32,7 @@ const Appsidebar = ({ categoryData }) => {
     <Sidebar>
       <SidebarHeader className="bg-white flex">
         <Link href="/">
-          <Image src={textlogo} alt="logo" className="w-36 p-2 mt-1.5" />
+          <Image src={textlogo} alt="logo" className="w-55 p-2 mt-1.5" />
         </Link>
       </SidebarHeader>
 

@@ -71,11 +71,14 @@ const SingleBlogPage = ({ blogData, related, category }) => {
     "[&_li]:mb-1 [&_li]:text-sm [&_li]:sm:text-base [&_li]:lg:text-lg [&_li]:text-justify",
     // "[&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto",
     // "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
-    "[&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto [&_img]:block [&_img]:mx-auto [&_img]:md:mx-0",
+    // "[&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto [&_img]:block [&_img]:mx-auto [&_img]:md:mx-0",
+    "[&_figure]:w-full [&_figure]:my-6 [&_figure]:mx-auto",
+"[&_img]:w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
     "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
     "[&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse",
     "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left [&_th]:min-w-[120px]",
     "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:min-w-[120px] [&_td]:text-sm [&_td]:sm:text-base",
+    
   ].join(" ")}
 ></div>
 
