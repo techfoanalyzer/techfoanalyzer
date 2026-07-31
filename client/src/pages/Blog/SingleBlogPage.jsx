@@ -7,8 +7,33 @@ import RelatedBlog from "@/components/common/RelatedBlog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import moment from "moment";
 import React from "react";
+import { useEffect, useRef } from 'react';
+
 
 const SingleBlogPage = ({ blogData, related, category }) => {
+
+
+  const contentRef = useRef(null);
+
+useEffect(() => {
+  if (!contentRef.current) return;
+  
+  const preElements = contentRef.current.querySelectorAll("pre");
+  preElements.forEach((pre) => {
+    const parentWidth = pre.parentElement.clientWidth - 32; 
+    const contentWidth = pre.scrollWidth;
+
+    if (contentWidth > parentWidth) {
+      const scale = parentWidth / contentWidth;
+      pre.style.transform = `scale(${scale})`;
+      pre.style.transformOrigin = "left top";
+      pre.style.width = `${(100 / scale)}%`;
+      pre.style.marginBottom = `-${pre.offsetHeight * (1 - scale)}px`;
+    }
+  });
+}, [blogData.blog.blogContent]);
+
+
   return (
   <div className="w-full px-3 sm:px-5 md:px-8 py-4 mb-10">
   <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start w-full">
@@ -56,6 +81,7 @@ const SingleBlogPage = ({ blogData, related, category }) => {
           </h1> */}
         
 <div 
+  ref={contentRef}
   dangerouslySetInnerHTML={{
     __html: blogData.blog.blogContent || "",
   }}
@@ -69,19 +95,23 @@ const SingleBlogPage = ({ blogData, related, category }) => {
     "[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-3",
     "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-3",
     "[&_li]:mb-1 [&_li]:text-sm [&_li]:sm:text-base [&_li]:lg:text-lg [&_li]:text-justify",
-    "[&_figure]:w-full [&_figure]:my-6 [&_figure]:mx-auto",
+    
+    /* 🖼️ Images Fix */
+    "[&_figure]:w-full [&_figure]:max-w-full [&_figure]:my-6 [&_figure]:mx-auto [&_figure]:block",
     "[&_figure.table]:w-full [&_figure.table]:overflow-x-auto [&_figure.table]:block",
-    "[&_img]:w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
+    "[&_img]:w-full [&_img]:max-w-full [&_img]:h-auto [&_img]:min-h-[180px] [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
+    
     "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
     "[&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:min-w-[500px]",
     "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left",
     "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:text-sm [&_td]:sm:text-base",
     
-    /* Rounded Gray Background Code Block + Scroll Fix */
-    "[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-100",
-    "[&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
-    "[&_pre]:max-w-full [&_pre]:overflow-x-auto [&_pre]:whitespace-pre [&_pre]:my-6",
-    "[&_code]:whitespace-pre [&_code]:bg-transparent [&_code]:p-0",
+    /* 📐 Clean Standard Monospace (Zero Font Distortion) */
+    "[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800/90 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-200",
+    "[&_pre]:p-3 [&_pre]:sm:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
+    "[&_pre]:my-6 [&_pre]:overflow-x-hidden",
+    "[&_pre]:[font-family:monospace] [&_pre]:text-xs [&_pre]:sm:text-sm [&_pre]:leading-snug",
+    "[&_code]:whitespace-pre [&_code]:bg-transparent [&_code]:p-0 [&_code]:[font-family:monospace] [&_code]:text-inherit",
   ].join(" ")}
 ></div>
 
