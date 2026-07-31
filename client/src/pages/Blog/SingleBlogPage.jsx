@@ -61,7 +61,7 @@ const SingleBlogPage = ({ blogData, related, category }) => {
   }}
   className={[
     "ck-content", 
-    "prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none break-words leading-relaxed text-foreground",
+    "prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none break-words leading-relaxed text-foreground overflow-hidden", // 👈 added overflow-hidden here
     "[&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-sm [&_p]:sm:text-base [&_p]:lg:text-lg [&_p]:text-justify",
     "[&_h1]:text-xl [&_h1]:sm:text-2xl [&_h1]:lg:text-3xl [&_h1]:font-bold [&_h1]:mt-6 [&_h1]:mb-3",
     "[&_h2]:text-lg [&_h2]:sm:text-xl [&_h2]:lg:text-2xl [&_h2]:font-bold [&_h2]:mt-5 [&_h2]:mb-2",
@@ -69,16 +69,12 @@ const SingleBlogPage = ({ blogData, related, category }) => {
     "[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-3",
     "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-3",
     "[&_li]:mb-1 [&_li]:text-sm [&_li]:sm:text-base [&_li]:lg:text-lg [&_li]:text-justify",
-    // "[&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto",
-    // "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
-    // "[&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto [&_img]:block [&_img]:mx-auto [&_img]:md:mx-0",
-    "[&_figure]:w-full [&_figure]:my-6 [&_figure]:mx-auto",
-"[&_img]:w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
+    "[&_figure]:w-full [&_figure]:my-6 [&_figure]:mx-auto [&_figure]:overflow-x-auto", // 👈 CKEditor table figure wrapped
+    "[&_img]:w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
     "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
-    "[&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse",
-    "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left [&_th]:min-w-[120px]",
-    "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:min-w-[120px] [&_td]:text-sm [&_td]:sm:text-base",
-    
+    "[&_table]:max-w-full [&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:table-auto", // 👈 Table fixes
+    "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left [&_th]:min-w-[100px]",
+    "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:min-w-[100px] [&_td]:text-sm [&_td]:sm:text-base",
   ].join(" ")}
 ></div>
 

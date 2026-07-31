@@ -132,7 +132,7 @@ const Disclaimer = () => {
             </div>
 
             <a 
-              href={`mailto:${contactEmail}`} 
+              href='/contact-us'
               className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-semibold transition-all duration-300 shrink-0"
             >
               Contact Support
