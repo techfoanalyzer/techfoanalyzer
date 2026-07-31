@@ -1,8 +1,8 @@
 import { getBlogByCategory } from '@/apiServices/category/allCatergory';
 import CategoryBlogDetails from '@/pages/Category/CategoryBlogDetails';
 import { notFound } from 'next/navigation';
-import React from 'react';
 
+export const dynamic = 'force-dynamic';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://techfoanalyzer.com';
 

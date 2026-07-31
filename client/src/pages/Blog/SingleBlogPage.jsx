@@ -31,7 +31,7 @@ useEffect(() => {
       pre.style.marginBottom = `-${pre.offsetHeight * (1 - scale)}px`;
     }
   });
-}, [blogData.blog.blogContent]);
+}, [blogData?.blog?.blogContent]);
 
 
   return (
@@ -83,7 +83,7 @@ useEffect(() => {
 <div 
   ref={contentRef}
   dangerouslySetInnerHTML={{
-    __html: blogData.blog.blogContent || "",
+    __html: blogData?.blog?.blogContent || "",
   }}
   className={[
     "ck-content", 
