@@ -17,20 +17,18 @@ const SingleBlogPage = ({ blogData, related, category }) => {
 
 useEffect(() => {
   if (!contentRef.current) return;
-
+  
   const preElements = contentRef.current.querySelectorAll("pre");
-
+  
   preElements.forEach((pre) => {
-    // 1. Re-render par scaling pehle Clean Reset karein
     pre.style.transform = "none";
     pre.style.transformOrigin = "top left";
     pre.style.width = "auto";
     pre.style.height = "auto";
     pre.style.marginBottom = "1.5rem";
 
-    // 📱 Check: Sirf Mobile aur Tablet screens (< 768px) par run karein
     const isMobile = window.innerWidth < 768;
-    if (!isMobile) return; // Laptop/Desktop screen par normal CSS rehne de
+    if (!isMobile) return;
 
     const parentContainer = pre.parentElement;
     if (!parentContainer) return;
@@ -42,14 +40,11 @@ useEffect(() => {
       const scale = parentWidth / contentWidth;
       const originalHeight = pre.scrollHeight;
 
-      // Scaled dimensions freeze
       pre.style.width = `${contentWidth}px`;
       pre.style.height = `${originalHeight}px`;
 
-      // Transform scale sirf mobile par apply hoga
       pre.style.transform = `scale(${scale})`;
 
-      // Dynamic vertical space gap adjustment
       const actualVisualHeight = originalHeight * scale;
       const extraGap = originalHeight - actualVisualHeight;
       pre.style.marginBottom = `-${extraGap - 16}px`;
@@ -105,39 +100,41 @@ useEffect(() => {
           </h1> */}
         
 <div 
-  ref={contentRef}
-  dangerouslySetInnerHTML={{
-    __html: blogData?.blog?.blogContent || "",
-  }}
-  className={[
-    "ck-content", 
-    "prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none break-words leading-relaxed text-foreground",
-    "[&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-sm [&_p]:sm:text-base [&_p]:lg:text-lg [&_p]:text-justify",
-    "[&_h1]:text-xl [&_h1]:sm:text-2xl [&_h1]:lg:text-3xl [&_h1]:font-bold [&_h1]:mt-6 [&_h1]:mb-3",
-    "[&_h2]:text-lg [&_h2]:sm:text-xl [&_h2]:lg:text-2xl [&_h2]:font-bold [&_h2]:mt-5 [&_h2]:mb-2",
-    "[&_h3]:text-base [&_h3]:sm:text-lg [&_h3]:lg:text-xl [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2",
-    "[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-3",
-    "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-3",
-    "[&_li]:mb-1 [&_li]:text-sm [&_li]:sm:text-base [&_li]:lg:text-lg [&_li]:text-justify",
-    
-    /* 🖼️ Images Fix */
-    "[&_figure]:w-full [&_figure]:max-w-full [&_figure]:my-6 [&_figure]:mx-auto [&_figure]:block",
-    "[&_figure.table]:w-full [&_figure.table]:overflow-x-auto [&_figure.table]:block",
-    "[&_img]:w-full [&_img]:max-w-full [&_img]:h-auto [&_img]:min-h-[180px] [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
-    
-    "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
-    "[&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:min-w-[500px]",
-    "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left",
-    "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:text-sm [&_td]:sm:text-base",
-    
-   /* 📐 Clean Standard Monospace */
+    ref={contentRef}
+    dangerouslySetInnerHTML={{
+      __html: blogData?.blog?.blogContent || "",
+    }}
+    className={[
+      "ck-content", 
+      "prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none break-words leading-relaxed text-foreground",
+      "[&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-sm [&_p]:sm:text-base [&_p]:lg:text-lg [&_p]:text-justify",
+      "[&_h1]:text-xl [&_h1]:sm:text-2xl [&_h1]:lg:text-3xl [&_h1]:font-bold [&_h1]:mt-6 [&_h1]:mb-3",
+      "[&_h2]:text-lg [&_h2]:sm:text-xl [&_h2]:lg:text-2xl [&_h2]:font-bold [&_h2]:mt-5 [&_h2]:mb-2",
+      "[&_h3]:text-base [&_h3]:sm:text-lg [&_h3]:lg:text-xl [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2",
+      "[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-3",
+      "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-3",
+      "[&_li]:mb-1 [&_li]:text-sm [&_li]:sm:text-base [&_li]:lg:text-lg [&_li]:text-justify",
+      
+      /* 🖼️ Images Fix */
+      "[&_figure]:w-full [&_figure]:max-w-full [&_figure]:my-6 [&_figure]:mx-auto [&_figure]:block",
+      "[&_figure.table]:w-full [&_figure.table]:overflow-x-auto [&_figure.table]:block",
+      "[&_img]:w-full [&_img]:max-w-full [&_img]:h-auto [&_img]:min-h-[180px] [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
+      
+      "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
+      "[&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:min-w-[500px]",
+      "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left",
+      "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:text-sm [&_td]:sm:text-base",
+      
+      /* 📐 Diagrams Clean Rendering Fix */
+      /* 📐 Dynamic Diagram Formatting Lock (ASCII Tree & Columns Preservation) */
 "[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800/90 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-200",
-"[&_pre]:p-2 [&_pre]:sm:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
+"[&_pre]:p-3 [&_pre]:sm:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
 "[&_pre]:my-6 [&_pre]:overflow-x-hidden",
-"[&_pre]:[font-family:monospace] [&_pre]:text-xs [&_pre]:sm:text-sm [&_pre]:leading-snug",
-"[&_code]:whitespace-pre [&_code]:bg-transparent [&_code]:p-0 [&_code]:[font-family:monospace] [&_code]:text-inherit",
-  ].join(" ")}
-></div>
+"[&_pre]:[font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace]",
+"[&_pre]:text-xs [&_pre]:sm:text-sm [&_pre]:leading-[1.2] [&_pre]:tracking-normal",
+"[&_code]:whitespace-pre [&_code]:word-break-normal [&_code]:break-normal [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-inherit",
+    ].join(" ")}
+  ></div>
 
           {/* Comments Section */}
           <div className="border-t mt-10 pt-6">
