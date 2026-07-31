@@ -17,41 +17,66 @@ const SingleBlogPage = ({ blogData, related, category }) => {
 
 useEffect(() => {
   if (!contentRef.current) return;
-  
-  const preElements = contentRef.current.querySelectorAll("pre");
-  
-  preElements.forEach((pre) => {
-    pre.style.transform = "none";
-    pre.style.transformOrigin = "top left";
-    pre.style.width = "auto";
-    pre.style.height = "auto";
-    pre.style.marginBottom = "1.5rem";
 
-    const isMobile = window.innerWidth < 768;
-    if (!isMobile) return;
+  const handleResponsiveDiagrams = () => {
+    const preElements = contentRef.current?.querySelectorAll("pre");
+    if (!preElements) return;
 
-    const parentContainer = pre.parentElement;
-    if (!parentContainer) return;
+    preElements.forEach((pre) => {
+      // 1. Full Clean Reset pehle karein
+      pre.style.transform = "none";
+      pre.style.transformOrigin = "top left";
+      pre.style.width = "auto";
+      pre.style.height = "auto";
+      pre.style.marginBottom = "1.5rem";
 
-    const parentWidth = parentContainer.clientWidth ? parentContainer.clientWidth - 12 : 0;
-    const contentWidth = pre.scrollWidth;
+      // 💻 Only Mobile Check (Real Hardware Screen Width)
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      if (!isMobile) return;
 
-    if (parentWidth > 0 && contentWidth > parentWidth) {
-      const scale = parentWidth / contentWidth;
-      const originalHeight = pre.scrollHeight;
+      const parentContainer = pre.parentElement;
+      if (!parentContainer) return;
 
-      pre.style.width = `${contentWidth}px`;
-      pre.style.height = `${originalHeight}px`;
+      // Real Device Render Padding Fix
+      const parentWidth = parentContainer.getBoundingClientRect().width - 16;
+      const contentWidth = pre.scrollWidth;
 
-      pre.style.transform = `scale(${scale})`;
+      if (parentWidth > 0 && contentWidth > parentWidth) {
+        const scale = parentWidth / contentWidth;
+        const originalHeight = pre.scrollHeight;
 
-      const actualVisualHeight = originalHeight * scale;
-      const extraGap = originalHeight - actualVisualHeight;
-      pre.style.marginBottom = `-${extraGap - 16}px`;
-    }
+        // Frozen Layout Dimensions
+        pre.style.width = `${contentWidth}px`;
+        pre.style.height = `${originalHeight}px`;
+
+        // Exact Fit Transform Scale
+        pre.style.transform = `scale(${scale})`;
+
+        // Real Mobile Height Gap Adjustment
+        const actualVisualHeight = originalHeight * scale;
+        const extraGap = originalHeight - actualVisualHeight;
+        pre.style.marginBottom = `-${extraGap - 16}px`;
+      }
+    });
+  };
+
+  // Immediate Execution via Frame Animation (Fixes Real Mobile Delayed Render)
+  const animId = requestAnimationFrame(handleResponsiveDiagrams);
+
+  // Resize Observer for physical orientation & zoom changes
+  const resizeObserver = new ResizeObserver(() => {
+    handleResponsiveDiagrams();
   });
-}, [blogData?.blog?.blogContent]);
 
+  if (contentRef.current) {
+    resizeObserver.observe(contentRef.current);
+  }
+
+  return () => {
+    cancelAnimationFrame(animId);
+    resizeObserver.disconnect();
+  };
+}, [blogData?.blog?.blogContent]);
 
   return (
   <div className="w-full px-3 sm:px-5 md:px-8 py-4 mb-10">
