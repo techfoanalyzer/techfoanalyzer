@@ -134,7 +134,11 @@ const AddBlog = () => {
       setfilePreview(null);
 
       showToast("success", response.data.message || "Blog added successfully");
-      router.push('/blog');
+      router.refresh();
+
+  setTimeout(() => {
+    router.push('/blog');
+  }, 100);
     }
   } catch (error) {
     console.log("Error adding blog:", error);

@@ -1,6 +1,8 @@
 import { HomeData } from '@/apiServices/Home/Home'
 import HomePage from '@/pages/Home/Home'
 
+export const dynamic = 'force-dynamic';
+
 
 export const metadata = {
   title: "Tech, Cyber Security, AI, Web Dev & Software Analysis",
