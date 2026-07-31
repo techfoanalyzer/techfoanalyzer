@@ -76,6 +76,12 @@ const SingleBlogPage = ({ blogData, related, category }) => {
     "[&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:min-w-[500px]",
     "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left",
     "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:text-sm [&_td]:sm:text-base",
+    
+    /* Rounded Gray Background Code Block + Scroll Fix */
+    "[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-100",
+    "[&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
+    "[&_pre]:max-w-full [&_pre]:overflow-x-auto [&_pre]:whitespace-pre [&_pre]:my-6",
+    "[&_code]:whitespace-pre [&_code]:bg-transparent [&_code]:p-0",
   ].join(" ")}
 ></div>
 
