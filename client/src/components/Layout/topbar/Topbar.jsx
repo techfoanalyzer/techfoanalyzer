@@ -65,7 +65,7 @@ const Topbar = () => {
     <button type="button" onClick={toggleSidebar} className="md:hidden">
       <RiMenuFold2Fill size={20} />
     </button>
-    <Link href={"/"} className="w-44 sm:w-44 md:w-52">
+    <Link href={"/"} className="w-38 sm:w-44 md:w-52">
       <img
         src={textlogo.src || textlogo}
         alt="Logo"

@@ -10,7 +10,7 @@ import { useUserStore } from "@/store/userStore";
 const axiosOptions = { withCredentials: true };
 
 const LikeCount = ({ props }) => {
-  const [likeCount, setLikeCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(64);
   const [hasLiked, setHasLiked] = useState(false);
 
   const { user, isLoggedIn, isHydrated } = useUserStore();
