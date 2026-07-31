@@ -17,18 +17,42 @@ const SingleBlogPage = ({ blogData, related, category }) => {
 
 useEffect(() => {
   if (!contentRef.current) return;
-  
+
   const preElements = contentRef.current.querySelectorAll("pre");
+
   preElements.forEach((pre) => {
-    const parentWidth = pre.parentElement.clientWidth - 32; 
+    // 1. Re-render par scaling pehle Clean Reset karein
+    pre.style.transform = "none";
+    pre.style.transformOrigin = "top left";
+    pre.style.width = "auto";
+    pre.style.height = "auto";
+    pre.style.marginBottom = "1.5rem";
+
+    // 📱 Check: Sirf Mobile aur Tablet screens (< 768px) par run karein
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return; // Laptop/Desktop screen par normal CSS rehne de
+
+    const parentContainer = pre.parentElement;
+    if (!parentContainer) return;
+
+    const parentWidth = parentContainer.clientWidth ? parentContainer.clientWidth - 12 : 0;
     const contentWidth = pre.scrollWidth;
 
-    if (contentWidth > parentWidth) {
+    if (parentWidth > 0 && contentWidth > parentWidth) {
       const scale = parentWidth / contentWidth;
+      const originalHeight = pre.scrollHeight;
+
+      // Scaled dimensions freeze
+      pre.style.width = `${contentWidth}px`;
+      pre.style.height = `${originalHeight}px`;
+
+      // Transform scale sirf mobile par apply hoga
       pre.style.transform = `scale(${scale})`;
-      pre.style.transformOrigin = "left top";
-      pre.style.width = `${(100 / scale)}%`;
-      pre.style.marginBottom = `-${pre.offsetHeight * (1 - scale)}px`;
+
+      // Dynamic vertical space gap adjustment
+      const actualVisualHeight = originalHeight * scale;
+      const extraGap = originalHeight - actualVisualHeight;
+      pre.style.marginBottom = `-${extraGap - 16}px`;
     }
   });
 }, [blogData?.blog?.blogContent]);
@@ -106,12 +130,12 @@ useEffect(() => {
     "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left",
     "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:text-sm [&_td]:sm:text-base",
     
-    /* 📐 Clean Standard Monospace (Zero Font Distortion) */
-    "[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800/90 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-200",
-    "[&_pre]:p-3 [&_pre]:sm:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
-    "[&_pre]:my-6 [&_pre]:overflow-x-hidden",
-    "[&_pre]:[font-family:monospace] [&_pre]:text-xs [&_pre]:sm:text-sm [&_pre]:leading-snug",
-    "[&_code]:whitespace-pre [&_code]:bg-transparent [&_code]:p-0 [&_code]:[font-family:monospace] [&_code]:text-inherit",
+   /* 📐 Clean Standard Monospace */
+"[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800/90 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-200",
+"[&_pre]:p-2 [&_pre]:sm:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
+"[&_pre]:my-6 [&_pre]:overflow-x-hidden",
+"[&_pre]:[font-family:monospace] [&_pre]:text-xs [&_pre]:sm:text-sm [&_pre]:leading-snug",
+"[&_code]:whitespace-pre [&_code]:bg-transparent [&_code]:p-0 [&_code]:[font-family:monospace] [&_code]:text-inherit",
   ].join(" ")}
 ></div>
 
