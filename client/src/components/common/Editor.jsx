@@ -91,6 +91,7 @@ const getImagesFromHTML = (htmlString) => {
 
 export default function Editor({ props }) {
   const [isMounted, setIsMounted] = useState(false);
+  const isUploadingRef = useRef(false);
   const currentImagesRef = useRef(new Set());
   const isSubmittingRef = useRef(false); 
 
@@ -460,21 +461,79 @@ export default function Editor({ props }) {
       editor={ClassicEditor}
       config={editorConfig}
       data={props?.initialData || ""}
-    onReady={(editor) => {
-  // 1. Initial loaded images Set store karein
+//     onReady={(editor) => {
+//   // 1. Initial loaded images Set store karein
+//   const initialHTML = editor.getData();
+//   currentImagesRef.current = getImagesFromHTML(initialHTML);
+
+//   let timer = null;
+
+//   // 2. Data Change Event Listener with Async Isolation
+//   editor.model.document.on("change:data", () => {
+//     // Timeout callstack clear karta hai taake infinite loop (Maximum call stack size) na bane
+//     if (timer) clearTimeout(timer);
+
+//     timer = setTimeout(() => {
+//       // Agar Form Submit ho raha hai, toh Delete trigger NA karein!
+//       if (isSubmittingRef.current) return;
+
+//       const newHTML = editor.getData();
+//       const newImages = getImagesFromHTML(newHTML);
+//       const token =
+//         typeof window !== "undefined"
+//           ? localStorage.getItem("token")
+//           : "";
+
+//       // Check which images were removed
+//       currentImagesRef.current.forEach(async (oldImageUrl) => {
+//         if (
+//           !newImages.has(oldImageUrl) &&
+//           oldImageUrl.includes("imagekit.io")
+//         ) {
+//           try {
+//             await axios.post(
+//               `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/delete-ckeditor-image`,
+//               { imageUrl: oldImageUrl },
+//               {
+//                 withCredentials: true,
+//                 headers: {
+//                   Authorization: `Bearer ${token}`,
+//                 },
+//               }
+//             );
+//             console.log("Deleted removed image from ImageKit:", oldImageUrl);
+//           } catch (err) {
+//             console.error("Failed to delete image:", err);
+//           }
+//         }
+//       });
+
+//       // Update Ref to new state
+//       currentImagesRef.current = newImages;
+//     }, 200); // 200ms delay ensures CKEditor finishes updating internal DOM widget states
+//   });
+// }}
+
+// 1. Ek ref context top-level component mein rakhein:
+
+
+// 2. Apne Image Upload Custom Plugin / Adapter mein upload start aur complete par ref set karein:
+// Upload Start:  isUploadingRef.current = true;
+// Upload Finish: isUploadingRef.current = false;
+
+// 3. Updated onReady Event Listener:
+onReady={(editor) => {
   const initialHTML = editor.getData();
   currentImagesRef.current = getImagesFromHTML(initialHTML);
 
   let timer = null;
 
-  // 2. Data Change Event Listener with Async Isolation
   editor.model.document.on("change:data", () => {
-    // Timeout callstack clear karta hai taake infinite loop (Maximum call stack size) na bane
     if (timer) clearTimeout(timer);
 
     timer = setTimeout(() => {
-      // Agar Form Submit ho raha hai, toh Delete trigger NA karein!
-      if (isSubmittingRef.current) return;
+      // 🔒 Check 1: Agar Submitting ho Rahi hai YA Image Upload chal rahi hai toh Deletion SKIP karein
+      if (isSubmittingRef.current || isUploadingRef.current) return;
 
       const newHTML = editor.getData();
       const newImages = getImagesFromHTML(newHTML);
@@ -483,7 +542,7 @@ export default function Editor({ props }) {
           ? localStorage.getItem("token")
           : "";
 
-      // Check which images were removed
+      // Only find images that are TRULY deleted by user action
       currentImagesRef.current.forEach(async (oldImageUrl) => {
         if (
           !newImages.has(oldImageUrl) &&
@@ -507,9 +566,9 @@ export default function Editor({ props }) {
         }
       });
 
-      // Update Ref to new state
+      // Update Ref to current images state
       currentImagesRef.current = newImages;
-    }, 200); // 200ms delay ensures CKEditor finishes updating internal DOM widget states
+    }, 300); // Increased timeout to let upload finishes smoothly
   });
 }}
 
