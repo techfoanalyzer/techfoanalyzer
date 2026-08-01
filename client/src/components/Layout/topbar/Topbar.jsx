@@ -38,22 +38,24 @@ const Topbar = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
-        { withCredentials: true },
-      );
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
+      { withCredentials: true }
+    );
 
-      if (response.data.success) {
-        const data = response.data;
-        removeUser();
-        showToast("info", data.message);
-        router.replace("/");
-      }
-    } catch (error) {
-      console.log(error.message);
+    if (response.data.success) {
+      showToast("info", response.data.message || "Logged out successfully!");
     }
-  };
+  } catch (error) {
+    console.log("Logout API error:", error?.response?.data?.message || error.message);
+    showToast("info", "Logged out locally.");
+  } finally {
+ 
+    removeUser();
+    router.replace("/");
+  }
+};
 
   const toggleSearch = () => {
     setshowSearch(!showSearch);
