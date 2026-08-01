@@ -91,7 +91,8 @@ const getImagesFromHTML = (htmlString) => {
 
 export default function Editor({ props }) {
   const [isMounted, setIsMounted] = useState(false);
-  const currentImagesRef = useRef(new Set()); // Purani images ka track rakhne ke liye
+  const currentImagesRef = useRef(new Set());
+  const isSubmittingRef = useRef(false); 
 
   useEffect(() => {
     setIsMounted(true);
@@ -455,55 +456,70 @@ export default function Editor({ props }) {
     <div className="main-container">
       <div className="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar editor-container_include-fullscreen">
         <div className="editor-container__editor [&_.ck-content_h1]:text-3xl [&_.ck-content_h1]:font-bold [&_.ck-content_h1]:my-4 [&_.ck-content_h2]:text-2xl [&_.ck-content_h2]:font-bold [&_.ck-content_h2]:my-3 [&_.ck-content_h3]:text-xl [&_.ck-content_h3]:font-bold [&_.ck-content_h3]:my-2 [&_.ck-content_h4]:text-lg [&_.ck-content_h4]:font-bold [&_.ck-content_h5]:text-base [&_.ck-content_h5]:font-bold [&_.ck-content_h6]:text-sm [&_.ck-content_h6]:font-bold [&_.ck-content_ul]:list-disc [&_.ck-content_ul]:ml-5 [&_.ck-content_ol]:list-decimal [&_.ck-content_ol]:ml-5">
-          <CKEditor
-            editor={ClassicEditor}
-            config={editorConfig}
-            data={props?.initialData || ""}
-            onReady={(editor) => {
-              // Initial loaded images list ko store kar lein
-              currentImagesRef.current = getImagesFromHTML(editor.getData());
+         <CKEditor
+      editor={ClassicEditor}
+      config={editorConfig}
+      data={props?.initialData || ""}
+    onReady={(editor) => {
+  // 1. Initial loaded images Set store karein
+  const initialHTML = editor.getData();
+  currentImagesRef.current = getImagesFromHTML(initialHTML);
 
-              // Content change hone par missing images detect karein
-              editor.model.document.on("change:data", () => {
-                const newHTML = editor.getData();
-                const newImages = getImagesFromHTML(newHTML);
-                const token =
-                  typeof window !== "undefined"
-                    ? localStorage.getItem("token")
-                    : "";
+  let timer = null;
 
-                // Jo purani list me the par ab nahi hain -> delete payload trigger karein
-                currentImagesRef.current.forEach(async (oldImageUrl) => {
-                  if (!newImages.has(oldImageUrl)) {
-                    try {
-                      await axios.post(
-                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/delete-ckeditor-image`,
-                        { imageUrl: oldImageUrl },
-                        {
-                          // Argument 3: Config Object
-                          withCredentials: true,
-                          headers: {
-                            Authorization: `Bearer ${token}`,
-                          },
-                        },
-                      );
-                      // console.log("Deleted image from ImageKit:", oldImageUrl);
-                    } catch (err) {
-                      console.error("Failed to delete image:", err);
-                    }
-                  }
-                });
+  // 2. Data Change Event Listener with Async Isolation
+  editor.model.document.on("change:data", () => {
+    // Timeout callstack clear karta hai taake infinite loop (Maximum call stack size) na bane
+    if (timer) clearTimeout(timer);
 
-                // Current images Ref ko update kar dein
-                currentImagesRef.current = newImages;
-              });
-            }}
-            onChange={(event, editor) => {
-              if (props?.onChange) {
-                props.onChange(event, editor);
+    timer = setTimeout(() => {
+      // Agar Form Submit ho raha hai, toh Delete trigger NA karein!
+      if (isSubmittingRef.current) return;
+
+      const newHTML = editor.getData();
+      const newImages = getImagesFromHTML(newHTML);
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token")
+          : "";
+
+      // Check which images were removed
+      currentImagesRef.current.forEach(async (oldImageUrl) => {
+        if (
+          !newImages.has(oldImageUrl) &&
+          oldImageUrl.includes("imagekit.io")
+        ) {
+          try {
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/delete-ckeditor-image`,
+              { imageUrl: oldImageUrl },
+              {
+                withCredentials: true,
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
               }
-            }}
-          />
+            );
+            console.log("Deleted removed image from ImageKit:", oldImageUrl);
+          } catch (err) {
+            console.error("Failed to delete image:", err);
+          }
+        }
+      });
+
+      // Update Ref to new state
+      currentImagesRef.current = newImages;
+    }, 200); // 200ms delay ensures CKEditor finishes updating internal DOM widget states
+  });
+}}
+
+
+      onChange={(event, editor) => {
+        if (props?.onChange) {
+          props.onChange(event, editor);
+        }
+      }}
+    />
         </div>
       </div>
     </div>

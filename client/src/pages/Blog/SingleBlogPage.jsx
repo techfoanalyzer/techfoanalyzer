@@ -6,6 +6,7 @@ import LikeCount from "@/components/common/LikeCount";
 import RelatedBlog from "@/components/common/RelatedBlog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import moment from "moment";
+import Link from "next/link";
 import React from "react";
 import { useEffect, useRef } from 'react';
 
@@ -71,9 +72,11 @@ useEffect(() => {
    
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-3 border-y border-border my-4">
             <div className="flex items-center gap-3">
+              <Link href={'/'}>           
               <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
                 <AvatarImage src={blogData?.blog?.author?.avatar} />
               </Avatar>
+              </Link>
               <div>
                 <p className="font-semibold text-sm sm:text-base leading-tight">
                   {blogData?.blog?.author?.name}
@@ -117,17 +120,24 @@ useEffect(() => {
     "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-3",
     "[&_li]:mb-1 [&_li]:text-sm [&_li]:sm:text-base [&_li]:lg:text-lg [&_li]:text-justify",
     
-    /* 🖼️ Images Fix */
-    "[&_figure]:w-full [&_figure]:max-w-full [&_figure]:my-6 [&_figure]:mx-auto [&_figure]:block",
-    "[&_figure.table]:w-full [&_figure.table]:overflow-x-auto [&_figure.table]:block",
-    "[&_img]:w-full [&_img]:max-w-full [&_img]:h-auto [&_img]:min-h-[180px] [&_img]:rounded-lg [&_img]:my-4 [&_img]:block [&_img]:object-cover",
+    /* 🖼️ MOBILE & LAPTOP IMAGE DISPLAY FIX */
+
+  // Figure Wrapper Fix
+  "[&_figure]:w-full [&_figure]:max-w-full [&_figure]:my-6 [&_figure]:mx-auto [&_figure]:block [&_figure]:clear-both [&_figure]:overflow-hidden",
+
+  // Table Fix
+  "[&_figure.table]:w-full [&_figure.table]:overflow-x-auto [&_figure.table]:block",
+
+  // Exact 16:9 Image Rule for Mobile & Desktop
+  "[&_img]:w-full [&_img]:max-w-full [&_img]:aspect-[16/9] [&_img]:object-cover [&_img]:rounded-lg [&_img]:my-4 [&_img]:block",
+
     
     "[&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4",
     "[&_table]:w-full [&_table]:my-6 [&_table]:border-collapse [&_table]:min-w-[500px]",
     "[&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:bg-muted [&_th]:font-bold [&_th]:text-left",
     "[&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:text-sm [&_td]:sm:text-base",
     
-    /* 📐 ASCII STABLE RENDERING FIX (Chrome DevTools + Mobile Device) */
+    /* 📐 ASCII STABLE DIAGRAM FIX */
     "[&_pre]:bg-zinc-100 dark:[&_pre]:bg-zinc-800/90 [&_pre]:text-zinc-800 dark:[&_pre]:text-zinc-200",
     "[&_pre]:p-3 [&_pre]:sm:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-200 dark:[&_pre]:border-zinc-700",
     "[&_pre]:my-6 [&_pre]:overflow-x-hidden",
