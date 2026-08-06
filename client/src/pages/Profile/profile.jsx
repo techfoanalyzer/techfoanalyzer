@@ -189,6 +189,7 @@ const Profile = () => {
               id="email"
               type="email"
               autoComplete="email"
+              disabled
               placeholder="name@example.com"
               {...register("email")}
             />
