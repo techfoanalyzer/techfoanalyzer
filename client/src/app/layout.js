@@ -20,6 +20,10 @@ export const metadata = {
     index: true,
     follow: true,
   },
+
+  verification: {
+    google: "1FsZfeC4IAGJ1psSY3nvsD__rk-aHFmEYvoGnSPUZo8",
+  },
 };
 
 export default function RootLayout({ children }) {
