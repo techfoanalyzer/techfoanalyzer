@@ -1,7 +1,7 @@
 // app/sitemap.js
 
 export default async function sitemap() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.techfoanalyzer.com";
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   let blogs = [];
