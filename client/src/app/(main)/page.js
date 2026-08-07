@@ -9,14 +9,14 @@ export const metadata = {
   description:
     "Your ultimate tech hub for Cyber Security, Artificial Intelligence, Web Development, Cloud Computing, Software Reviews, DevOps, and Emerging Tech Trends.",
 
-    icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
-    ],
-    shortcut: '/favicon.ico',
-    apple: '/apple-icon.png',
-  },
+   icons: {
+  icon: [
+    { url: 'https://www.techfoanalyzer.com/favicon.ico', type: 'image/x-icon' },
+    { url: 'https://www.techfoanalyzer.com/icon.png', sizes: '192x192', type: 'image/png' },
+  ],
+  shortcut: 'https://www.techfoanalyzer.com/favicon.ico',
+  apple: 'https://www.techfoanalyzer.com/apple-icon.png', 
+},
   keywords: [
     "TechfoAnalyzer", "Tech News", "Software Analysis", "Tech Blogs", "IT Industry Insights",
     "Cyber Security", "Ethical Hacking", "Passkeys", "MFA Security", "Network Security", "Data Privacy",
