@@ -36,7 +36,7 @@ export const metadata = {
     siteName: "TechfoAnalyzer",
     images: [
       {
-        url: "/og-home-banner.jpg", 
+        url: "https://www.techfoanalyzer.com/og-home-banner.jpg", 
         width: 1200,
         height: 630,
         alt: "TechfoAnalyzer Tech Hub Banner",
@@ -52,7 +52,7 @@ export const metadata = {
     title: "TechfoAnalyzer | Tech, Security & Development Insights",
     description:
       "In-depth articles on Cyber Security, AI, Web Development, and Modern Tech Trends.",
-    images: ["/og-home-banner.jpg"],
+    images: ["https://www.techfoanalyzer.com/og-home-banner.jpg"],
   },
 };
 
