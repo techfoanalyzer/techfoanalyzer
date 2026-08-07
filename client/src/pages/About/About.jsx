@@ -7,7 +7,8 @@ import {
   ArrowRight, 
   Mail, 
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  UserCheck
 } from "lucide-react";
 import Image from "next/image";
 
@@ -17,7 +18,6 @@ const AboutPage = () => {
       
       {/* Background Soft Glow & Ambient Grid Pattern */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[800px] h-[350px] sm:h-[400px] bg-gradient-to-b from-red-500/10 via-slate-200/20 to-transparent blur-3xl pointer-events-none rounded-full" />
-      {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" /> */}
 
       <div className="max-w-5xl mx-auto space-y-16 sm:space-y-20 relative z-10">
         
@@ -72,7 +72,31 @@ const AboutPage = () => {
           </div>
         </div>
 
-        {/* 4. Specs Grid */}
+        {/* 4. Founder / Leadership Section (Option 1 Integration) */}
+        <div className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-white shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center relative z-10">
+            <div className="md:col-span-1">
+              <div className="p-3 rounded-xl bg-red-500/20 text-red-400 w-fit mb-4 border border-red-500/30">
+                <UserCheck className="w-6 h-6" />
+              </div>
+              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-red-400">
+                Leadership
+              </h2>
+              <h3 className="text-2xl font-bold text-white mt-1">Meet the Founder</h3>
+            </div>
+            <div className="md:col-span-2 space-y-3 text-slate-300 leading-relaxed text-base sm:text-lg">
+              <p>
+                <strong className="text-white font-semibold">TechfoAnalyzer</strong> was created and built by <strong className="text-white font-semibold">Mohammad Abdullah</strong> — a Full Stack Software Engineer and Cyber Security Analyst focused on resilient web platforms, secure cloud architectures, and high-performance systems.
+              </p>
+              <p className="text-sm text-slate-400">
+               Driven by a commitment to technical depth and system integrity, he leads the journal's architectural research, security insights, and engineering breakdowns.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Specs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Niches */}
