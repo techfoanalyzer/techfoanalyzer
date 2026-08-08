@@ -1,15 +1,16 @@
 // app/robots.js
 
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://techfoanalyzer.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.techfoanalyzer.com";
 
   return {
     rules: {
       userAgent: "*",
       allow: "/",
       disallow: [
-        "/blog/",         
-        "/category/",     
+        "/blog",           
+        "/blog/",          
+        "/category/",      
         "/search",        
         "/users/", 
         "/comments/",
