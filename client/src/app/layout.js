@@ -23,6 +23,7 @@ export const metadata = {
 
   verification: {
     google: "1FsZfeC4IAGJ1psSY3nvsD__rk-aHFmEYvoGnSPUZo8",
+    yandex: "3b14d0c187a3a554",
   },
 };
 
