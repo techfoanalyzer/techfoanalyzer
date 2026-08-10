@@ -56,6 +56,23 @@ useEffect(() => {
   });
 }, [blogData?.blog?.blogContent]);
 
+
+useEffect(() => {
+    if (!contentRef.current || !blogData?.blog?.tittle) return;
+
+    const images = contentRef.current.querySelectorAll("img");
+    const blogTitle = blogData.blog.tittle;
+
+    images.forEach((img, index) => {
+      
+      if (!img.getAttribute("alt") || img.getAttribute("alt").trim() === "") {
+        const altText =
+          index === 0 ? blogTitle : `${blogTitle} - Figure ${index + 1}`;
+        img.setAttribute("alt", altText);
+      }
+    });
+  }, [blogData?.blog?.blogContent, blogData?.blog?.tittle]);
+
   return (
   <div className="w-full px-3 sm:px-5 md:px-8 py-4 mb-10">
   <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start w-full">
@@ -74,7 +91,7 @@ useEffect(() => {
             <div className="flex items-center gap-3">
               <Link href={'/'}>           
               <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
-                <AvatarImage src={blogData?.blog?.author?.avatar} />
+                <AvatarImage src={blogData?.blog?.author?.avatar} alt={blogData?.blog?.author?.name || "Author Avatar"} />
               </Avatar>
               </Link>
               <div>

@@ -23,3 +23,9 @@ export default function robots() {
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
+
+
+// allow: [
+//           "/",
+//           "/blogs/*",  // Explicitly allow blogs path first
+//         ],
