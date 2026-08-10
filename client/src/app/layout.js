@@ -11,7 +11,7 @@ export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://techfoanalyzer.com"),
   title: {
     default: "TechfoAnalyzer | Latest Tech News & Analysis",
-    template: "%s | TechfoAnalyzer", 
+    // template: "%s | TechfoAnalyzer", 
   },
   description: "Explore in-depth tech insights, cyber security updates, passkeys, software analysis, and modern web development trends on TechfoAnalyzer.",
   keywords: ["Tech News", "Cyber Security", "Software Analysis", "Web Development", "TechfoAnalyzer"],

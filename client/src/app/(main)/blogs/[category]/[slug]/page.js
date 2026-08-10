@@ -34,7 +34,9 @@ export async function generateMetadata({ params }) {
   // console.log(imageUrl);
 
   return {
-    title: blog?.tittle || "Blog Post",
+   title: {
+    absolute: blog?.tittle || "Blog Post",
+  },
     description: rawDescription || "Read the latest update on this topic.",
 
     // 1. Canonical URL (Duplicate Content Defense)
@@ -102,17 +104,26 @@ const blogDetailPage = async ({ params }) => {
 
   // Google Schema Markup (Rich Snippets ke liye)
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: blog?.tittle,
-    description: rawDescription,
-    image: blog?.featureImage || `${SITE_URL}/default-blog.jpg`,
-    datePublished: blog?.createdAt,
-    author: {
-      "@type": "Person",
-      name: blog?.author?.name || "Author",
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: blog?.tittle,
+  description: rawDescription,
+  image: blog?.featureImage || `${SITE_URL}/default-blog.jpg`,
+  datePublished: blog?.createdAt,
+  author: {
+    "@type": "Person",
+    name: blog?.author?.name || "Author",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Techfo Analyzer",
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/icon.png`, // ensure logo.png file exists in public/ folder
     },
-  };
+  },
+};
 
   return (
      (
