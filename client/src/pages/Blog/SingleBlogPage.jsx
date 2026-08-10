@@ -10,9 +10,8 @@ import Link from "next/link";
 import React from "react";
 import { useEffect, useRef } from 'react';
 import hljs from "highlight.js";
-// import "highlight.js/styles/atom-one-dark.css";
 import "highlight.js/styles/atom-one-light.css";
-
+import { Check, Copy } from "lucide-react"; 
 
 const SingleBlogPage = ({ blogData, related, category }) => {
 
@@ -76,13 +75,63 @@ useEffect(() => {
     });
   }, [blogData?.blog?.blogContent, blogData?.blog?.tittle]);
 
-  useEffect(() => {
-  if (contentRef.current) {
-    const codeBlocks = contentRef.current.querySelectorAll("pre code");
-    codeBlocks.forEach((block) => {
-      hljs.highlightElement(block);
+// 1. Syntax Highlighting + Dynamic Copy Button Injector
+useEffect(() => {
+  if (!contentRef.current) return;
+
+  const preBlocks = contentRef.current.querySelectorAll("pre");
+
+  preBlocks.forEach((pre) => {
+    // A. Code Block Syntax Highlighting Apply Karein
+    const codeBlock = pre.querySelector("code");
+    if (codeBlock && !codeBlock.dataset.highlighted) {
+      hljs.highlightElement(codeBlock);
+    }
+
+    // B. Check Karein ke Button pehle se toh nahi laga hua (Re-render duplication fix)
+    if (pre.querySelector(".copy-code-btn")) return;
+
+    // C. Pre Tag Ko Relative Position Banayein
+    pre.style.position = "relative";
+
+    // D. Copy Button Element Create Karein
+    const button = document.createElement("button");
+    button.className =
+      "copy-code-btn absolute top-2 right-2 px-2.5 py-1 text-xs font-medium bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-200 rounded-md transition-all duration-200 flex items-center gap-1 shadow-sm opacity-90 hover:opacity-100 z-10";
+    
+    button.innerHTML = `
+      <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+      <span>Copy</span>
+    `;
+
+    // E. Click Event Listener (Clipboard Copy Logic)
+    button.addEventListener("click", async () => {
+      const codeText = codeBlock ? codeBlock.innerText : pre.innerText;
+
+      try {
+        await navigator.clipboard.writeText(codeText);
+
+        // Feedback UI: Show Copied State
+        button.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <span class="text-green-600 dark:text-green-400 font-semibold">Copied!</span>
+        `;
+
+        // 2 Seconds Baad Reset Button State
+        setTimeout(() => {
+          button.innerHTML = `
+            <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <span>Copy</span>
+          `;
+        }, 2000);
+      } catch (err) {
+        console.error("Failed to copy code: ", err);
+      }
     });
-  }
+
+    // F. Button Append Karein Code Block ke andar
+    pre.appendChild(button);
+  });
 }, [blogData?.blog?.blogContent]);
   return (
   <div className="w-full px-3 sm:px-5 md:px-8 py-4 mb-10">
