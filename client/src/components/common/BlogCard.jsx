@@ -39,7 +39,7 @@ const BlogCard = ({ props }) => {
               <FaRegCalendarCheck />
               <span>{moment(props?.createdAt).format("DD-MMM-YYYY")}</span>
             </p>
-            <h1 className="text-xl font-bold line-clamp-2">{props?.tittle}</h1>
+            <h2 className="text-xl font-bold tracking-tight line-clamp-2">{props?.tittle}</h2>
           </div>
         </CardContent>
       </Card>
