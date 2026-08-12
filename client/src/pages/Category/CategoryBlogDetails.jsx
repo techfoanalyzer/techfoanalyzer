@@ -5,9 +5,9 @@ const CategoryBlogDetails = ({blogData}) => {
 
   return (
     <>
-      <div className="flex items-center gap-3 md:px-5 px-2 text-3xl font-bold mt-7 border-b pb-3 mb-5 ">
+      <div className="flex items-center gap-3 md:px-5 px-2 text-xl md:text-3xl font-bold mt-7 border-b pb-3 mb-5 pt-14 ">
         <TbCategory2 />
-        <h4>{blogData && blogData.categoryData?.name}</h4>
+        <h4 >{blogData && blogData.categoryData?.name}</h4>
       </div>
       <div
         className="grid gap-6 md:gap-10 items-stretch px-2 md:px-5 mb-10"

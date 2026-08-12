@@ -126,7 +126,7 @@ const Profile = () => {
   };
 
   return (
-    <Card className="max-w-3xl mx-auto my-10 shadow-md">
+    <Card className="max-w-3xl mx-auto my-17 shadow-md ">
       <Link href={'/'}>
         <div className="px-5 py-2 flex w-34 items-center gap-2 border rounded-full ml-5 hover:bg-red-500 hover:text-white transition-all">
           <RxHome />

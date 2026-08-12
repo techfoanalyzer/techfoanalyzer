@@ -17,7 +17,7 @@ export default  async function MainLayout({ children }) {
       
 
       <main className="w-full flex flex-col justify-between">
-        <div className="w-full min-h-[calc(100vh-45px)] pt-17 px-2 md:px-1">
+        <div className="w-full min-h-[calc(100vh-45px)] pt-5 px-2 md:px-1">
           {children}
         </div>
         <Footer />

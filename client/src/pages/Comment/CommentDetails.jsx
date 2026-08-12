@@ -49,7 +49,7 @@ const CommentDetails = () => {
 
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-17 px-5">
        <div className="mb-7 flex gap-2 items-center">
                 <FaRegComments size={30} />
                 <h2 className=" font-bold">

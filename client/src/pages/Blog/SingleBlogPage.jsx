@@ -141,7 +141,7 @@ useEffect(() => {
   });
 }, [blogData?.blog?.blogContent]);
   return (
-    <div className="w-full px-3 sm:px-5 md:px-8 py-4 mb-10">
+    <div className="w-full px-3 sm:px-5 md:px-8 pt-17 mb-10">
       <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start w-full">
         {blogData && blogData.blog && (
           <>
