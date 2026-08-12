@@ -1,45 +1,60 @@
+import { memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { FaRegCalendarCheck } from "react-icons/fa";
 import icon from "@/assets/images/placeHolder.png";
-import moment from "moment";
 import { MdVerified } from "react-icons/md";
+import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import Link from "next/link";
 
-const BlogCard = ({ props }) => {
+const BlogCard = ({ blog }) => {
+
+  console.log(blog);
+  
   return (
-    <Link href={`/blogs/${props?.category?.slug}/${props?.slug}`}>
-      <Card className="pt-5">
+    <Link href={`/blogs/${blog?.category?.slug}/${blog?.slug}`} className="group block">
+      <Card className="pt-5 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md">
         <CardContent>
+          {/* Author Header */}
           <div className="flex justify-between items-center mx-1">
             <div className="flex gap-2 items-center">
               <Avatar>
                 <AvatarImage 
-                  src={props?.author?.avatar || icon} 
-                  alt={props?.author?.name || "Author avatar"} 
+                  src={blog?.author?.avatar || icon} 
+                  alt={blog?.author?.name || "Author avatar"} 
                 />
               </Avatar>
-              <span>{props?.author?.name}</span>
+              <span className="text-sm font-medium">{blog?.author?.name}</span>
             </div>
-            {props?.author?.role === "admin" && (
-              <MdVerified className="size-6 text-red-600" />
+            {blog?.author?.role === "admin" && (
+              <MdVerified className="size-5 text-red-600" />
             )}
           </div>
 
-          <div className="my-2">
+          {/* Feature Image */}
+          <div className="my-3 overflow-hidden rounded">
             <img 
-              src={props?.featureImage} 
-              alt={props?.tittle || "Blog feature image"} 
-              className="rounded aspect-video w-full object-cover" 
+              src={blog?.featureImage} 
+              alt={blog?.tittle || blog?.title || "Blog feature image"} 
+              className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105" 
             />
           </div>
 
-          <div className="mt-5">
-            <p className="flex items-center gap-2 mb-2">
-              <FaRegCalendarCheck />
-              <span>{moment(props?.createdAt).format("DD-MMM-YYYY")}</span>
-            </p>
-            <h2 className="text-xl font-bold tracking-tight line-clamp-2">{props?.tittle}</h2>
+          {/* Category Badge (Light Gray BG + Black Text) */}
+          <div className="mt-4 mb-2">
+            <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-900 border border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700">
+              {blog?.category?.name || "Tech"}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h2 className="text-lg font-bold tracking-tight line-clamp-2 transition-colors duration-200 group-hover:text-gray-700 dark:group-hover:text-gray-300 mb-3">
+            {blog?.tittle || blog?.title}
+          </h2>
+
+          {/* Read Article Indicator */}
+          <div className="inline-flex items-center text-xs font-semibold text-muted-foreground transition-colors duration-200 group-hover:text-gray-900 dark:group-hover:text-gray-100">
+            <span>Read Article</span>
+            <HiOutlineArrowNarrowRight className="ml-1 text-sm transition-transform duration-200 group-hover:translate-x-1" />
           </div>
         </CardContent>
       </Card>
@@ -47,4 +62,4 @@ const BlogCard = ({ props }) => {
   );
 };
 
-export default BlogCard;
+export default memo(BlogCard);

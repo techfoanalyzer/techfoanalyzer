@@ -63,6 +63,7 @@ export const metadata = {
 const page = async () => {
   const AllBlogs = (await HomeData()) || [];
   
+  
   return (
     <div>
       <HomePage blogData={AllBlogs}/>

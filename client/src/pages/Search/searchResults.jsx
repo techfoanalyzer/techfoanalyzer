@@ -26,8 +26,8 @@ const SearchResultsContent = () => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-2 md:px-0">
-      <div className="flex items-center gap-3 text-2xl md:text-3xl font-bold border-b pb-3 mb-5">
+    <div className="max-w-6xl mx-auto pt-17 px-2 md:px-0">
+      <div className="flex items-center gap-3 text-xl md:text-3xl font-bold border-b pb-3 mb-5">
         <h4>
           Search Results For: <span className="text-red-600">"{query}"</span>
         </h4>
