@@ -3,20 +3,25 @@ import HomePage from '@/pages/Home/Home'
 
 export const dynamic = 'force-dynamic';
 
-
 export const metadata = {
   title: "Tech, Cyber Security, AI, Web Dev & Software Analysis",
   description:
     "Your ultimate tech hub for Cyber Security, Artificial Intelligence, Web Development, Cloud Computing, Software Reviews, DevOps, and Emerging Tech Trends.",
 
-   icons: {
-  icon: [
-    { url: 'https://www.techfoanalyzer.com/favicon.ico', type: 'image/x-icon' },
-    { url: 'https://www.techfoanalyzer.com/icon.png', sizes: '192x192', type: 'image/png' },
-  ],
-  shortcut: 'https://www.techfoanalyzer.com/favicon.ico',
-  apple: 'https://www.techfoanalyzer.com/apple-icon.png', 
-},
+
+  alternates: {
+    canonical: "https://www.techfoanalyzer.com",
+  },
+
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+  },
+
   keywords: [
     "TechfoAnalyzer", "Tech News", "Software Analysis", "Tech Blogs", "IT Industry Insights",
     "Cyber Security", "Ethical Hacking", "Passkeys", "MFA Security", "Network Security", "Data Privacy",
@@ -32,7 +37,7 @@ export const metadata = {
     title: "TechfoAnalyzer | Latest Tech News, AI & Cyber Security Insights",
     description:
       "Stay ahead with in-depth technical analysis, cyber security updates, AI breakthroughs, and modern web development tutorials.",
-    url: "https://techfoanalyzer.com", 
+    url: "https://www.techfoanalyzer.com", 
     siteName: "TechfoAnalyzer",
     images: [
       {
@@ -46,7 +51,6 @@ export const metadata = {
     type: "website",
   },
 
-
   twitter: {
     card: "summary_large_image",
     title: "TechfoAnalyzer | Tech, Security & Development Insights",
@@ -56,15 +60,12 @@ export const metadata = {
   },
 };
 
-
 const page = async () => {
-
-const AllBlogs = (await HomeData()) || [];
-  
+  const AllBlogs = (await HomeData()) || [];
   
   return (
     <div>
-     <HomePage blogData={AllBlogs}/>
+      <HomePage blogData={AllBlogs}/>
     </div>
   )
 }

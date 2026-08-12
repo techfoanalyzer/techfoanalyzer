@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://techfoanalyzer.com';
-
+// 🎯 Consistent WWW Domain Fallback
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.techfoanalyzer.com';
 
 export async function generateMetadata({ params }) {
   const { category } = await params;
@@ -23,6 +23,10 @@ export async function generateMetadata({ params }) {
   const pageDescription = `Browse the latest ${catName} articles, insights, tutorials, and tech news on Techfo Analyzer. Stay updated with expert posts in ${catName}.`;
   const pageUrl = `${SITE_URL}/blogs/${category}`;
   
+  const categoryImg = 
+    CategoryBlog?.categoryData?.featureImage || 
+    CategoryBlog?.categoryData?.image || 
+    `${SITE_URL}/og-default.jpg`;
 
   return {
     title: pageTitle,
@@ -44,7 +48,6 @@ export async function generateMetadata({ params }) {
       },
     },
 
-   
     openGraph: {
       title: pageTitle,
       description: pageDescription,
@@ -53,7 +56,7 @@ export async function generateMetadata({ params }) {
       type: 'website',
       images: [
         {
-          url: CategoryBlog?.categoryData?.featureImage || `${SITE_URL}/og-default.jpg`, // Category Image ya default banner
+          url: categoryImg,
           width: 1200,
           height: 630,
           alt: `${catName} Category Banner`,
@@ -61,16 +64,14 @@ export async function generateMetadata({ params }) {
       ],
     },
 
-   
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: [CategoryBlog?.categoryData?.image || `${SITE_URL}/og-default.jpg`],
+      images: [categoryImg],
     },
   };
 }
-
 
 const CategoryBlogPage = async ({ params }) => {
   const { category } = await params;

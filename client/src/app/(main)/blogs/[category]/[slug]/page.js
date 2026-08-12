@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 export const dynamic = 'force-dynamic';
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://techfoanalyzer.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.techfoanalyzer.com";
 
 export async function generateMetadata({ params }) {
   const { slug, category } = await params;
@@ -20,26 +20,27 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  // console.log(blog);
-
-  const rawDescription = blog?.blogContent
-    ?.replace(/<[^>]*>/g, "")
-    ?.trim()
-    ?.slice(0, 160);
+  // Description fallback chain & HTML cleaner
+  const rawDescription =
+    blog?.metaDescription ||
+    blog?.summary ||
+    blog?.blogContent
+      ?.replace(/<[^>]*>/g, "")
+      ?.replace(/\s+/g, " ")
+      ?.trim()
+      ?.slice(0, 155) ||
+    "Read the latest update on Techfo Analyzer.";
 
   const postUrl = `${SITE_URL}/blogs/${category ? `${category}/` : ""}${slug}`;
   const imageUrl = blog?.featureImage || `${SITE_URL}/default-blog.jpg`;
 
-  // console.log(postUrl);
-  // console.log(imageUrl);
-
   return {
-   title: {
-    absolute: blog?.tittle || "Blog Post",
-  },
-    description: rawDescription || "Read the latest update on this topic.",
+    title: {
+      absolute: blog?.tittle || "Blog Post",
+    },
+    description: rawDescription,
 
-    // 1. Canonical URL (Duplicate Content Defense)
+    // 1. Canonical URL Fix (Matching WWW Domain)
     alternates: {
       canonical: postUrl,
     },
@@ -56,7 +57,7 @@ export async function generateMetadata({ params }) {
       },
     },
 
-    // 3. Open Graph (WhatsApp / Facebook / LinkedIn)
+    // 3. Open Graph (Social Sharing)
     openGraph: {
       title: blog?.tittle,
       description: rawDescription,
@@ -64,7 +65,7 @@ export async function generateMetadata({ params }) {
       siteName: "Techfo Analyzer",
       type: "article",
       publishedTime: blog?.createdAt,
-      authors: [blog?.author?.name || "Author"],
+      authors: [blog?.author?.name || "Techfo Analyzer Team"],
       images: [
         {
           url: imageUrl,
@@ -97,52 +98,60 @@ const blogDetailPage = async ({ params }) => {
   const RelatedData = await RelatedBlog(category, slug);
 
   const blog = Data.blog;
-  const rawDescription = blog?.blogContent
-    ?.replace(/<[^>]*>/g, "")
-    ?.trim()
-    ?.slice(0, 160);
 
-  // Google Schema Markup (Rich Snippets ke liye)
+  const rawDescription =
+    blog?.metaDescription ||
+    blog?.summary ||
+    blog?.blogContent
+      ?.replace(/<[^>]*>/g, "")
+      ?.replace(/\s+/g, " ")
+      ?.trim()
+      ?.slice(0, 155) ||
+    "Read the latest update on Techfo Analyzer.";
+
+  const postUrl = `${SITE_URL}/blogs/${category ? `${category}/` : ""}${slug}`;
+
+
   const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: blog?.tittle,
-  description: rawDescription,
-  image: blog?.featureImage || `${SITE_URL}/default-blog.jpg`,
-  datePublished: blog?.createdAt,
-  author: {
-    "@type": "Person",
-    name: blog?.author?.name || "Author",
-  },
-  publisher: {
-    "@type": "Organization",
-    name: "Techfo Analyzer",
-    url: SITE_URL,
-    logo: {
-      "@type": "ImageObject",
-      url: `${SITE_URL}/icon.png`, // ensure logo.png file exists in public/ folder
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog?.tittle,
+    description: rawDescription,
+    image: blog?.featureImage || `${SITE_URL}/default-blog.jpg`,
+    datePublished: blog?.createdAt,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": postUrl,
     },
-  },
-};
+    author: {
+      "@type": "Person",
+      name: blog?.author?.name || "Techfo Analyzer Team",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Techfo Analyzer",
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/icon.png`,
+      },
+    },
+  };
 
   return (
-     (
-      <main>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      
+    <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
- <SingleBlogPage
-          blogData={Data}
-          related={RelatedData}
-          category={category}
-          slug={slug}
-        />
-       
-      </main>
-    )
+      <SingleBlogPage
+        blogData={Data}
+        related={RelatedData}
+        category={category}
+        slug={slug}
+      />
+    </main>
   );
 };
 
