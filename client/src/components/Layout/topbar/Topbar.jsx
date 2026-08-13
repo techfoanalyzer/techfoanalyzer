@@ -48,7 +48,10 @@ const Topbar = () => {
         showToast("info", response.data.message || "Logged out successfully!");
       }
     } catch (error) {
-      console.log("Logout API error:", error?.response?.data?.message || error.message);
+      console.log(
+        "Logout API error:",
+        error?.response?.data?.message || error.message
+      );
       showToast("info", "Logged out locally.");
     } finally {
       removeUser();
@@ -62,17 +65,17 @@ const Topbar = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center h-16 fixed w-full z-20 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 px-3 sm:px-5 transition-colors">
+      <div className="flex justify-between items-center h-16 fixed w-full z-20 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 px-2.5 sm:px-5 transition-colors">
         {/* Left Side: Sidebar Toggle & Logo */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink">
           <button
             type="button"
             onClick={toggleSidebar}
-            className="md:hidden p-1.5 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            className="md:hidden p-1.5 shrink-0 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
           >
             <RiMenuFold2Fill size={20} />
           </button>
-          <Link href={"/"} className="w-38 sm:w-44 md:w-52 flex items-center">
+          <Link href={"/"} className="w-28 xs:w-36 sm:w-44 md:w-52 flex items-center shrink">
             <img
               src={textlogo.src || textlogo}
               alt="Logo"
@@ -96,12 +99,12 @@ const Topbar = () => {
         </div>
 
         {/* Right Side Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           {/* Mobile Search Toggle Button */}
           <button
             onClick={toggleSearch}
             type="button"
-            className="md:hidden p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            className="md:hidden p-1.5 sm:p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors shrink-0"
           >
             {showSearch ? (
               <LuSearchX size={20} className="text-red-500" />
@@ -114,7 +117,7 @@ const Topbar = () => {
           <button
             onClick={() => setIsDictOpen(true)}
             type="button"
-            className="relative group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-800/50 hover:bg-red-100 dark:hover:bg-red-900/60 hover:border-red-300 active:scale-95 transition-all duration-200 shadow-xs"
+            className="relative group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-800/50 hover:bg-red-100 dark:hover:bg-red-900/60 hover:border-red-300 active:scale-95 transition-all duration-200 shadow-xs shrink-0"
             title="Tech & Urdu Dictionary"
           >
             {/* Soft Pulse Indicator Dot */}
@@ -124,7 +127,7 @@ const Topbar = () => {
             </span>
 
             {/* Icon with Hover Animation */}
-            <FiBookOpen className="text-base group-hover:rotate-12 transition-transform duration-200" />
+            <FiBookOpen className="text-base group-hover:rotate-12 transition-transform duration-200 shrink-0" />
 
             {/* Label for Desktop */}
             <span className="hidden md:inline-block font-semibold text-xs tracking-wide">
@@ -134,18 +137,18 @@ const Topbar = () => {
 
           {/* User Auth Section */}
           {!isHydrated ? (
-            <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 animate-pulse shrink-0" />
           ) : !isLoggedIn ? (
-            <Link href={"/sign-in"}>
-              <Button size="sm" className="rounded-full gap-1.5 font-medium px-4">
-                <PiSignIn className="text-base" />
+            <Link href={"/sign-in"} className="shrink-0">
+              <Button size="sm" className="rounded-full gap-1 font-medium px-2.5 sm:px-4 text-xs sm:text-sm h-8 sm:h-9">
+                <PiSignIn className="text-sm sm:text-base shrink-0" />
                 <span>Sign-In</span>
               </Button>
             </Link>
           ) : (
             <DropdownMenu>
-              <DropdownMenuTrigger className="outline-none cursor-pointer rounded-full ring-offset-background transition-shadow focus-visible:ring-2 focus-visible:ring-ring">
-                <Avatar className="h-9 w-9 border border-zinc-200 dark:border-zinc-800">
+              <DropdownMenuTrigger className="outline-none cursor-pointer rounded-full ring-offset-background transition-shadow focus-visible:ring-2 focus-visible:ring-ring shrink-0">
+                <Avatar className="h-8 w-8 sm:h-9 sm:w-9 border border-zinc-200 dark:border-zinc-800">
                   <AvatarImage
                     src={user?.user?.avatar || userIcon}
                     className="object-cover"

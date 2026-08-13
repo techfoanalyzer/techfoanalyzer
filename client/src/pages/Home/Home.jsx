@@ -130,31 +130,31 @@ const HomePage = ({ blogData }) => {
             </div>
 
             {/* Live Metrics Bar */}
-          <div className="flex items-center gap-x-3 sm:gap-6 pt-2 text-xs text-muted-foreground border-t border-border/40 w-full max-w-lg overflow-x-auto whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+<div className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-6 pt-2 text-xs text-muted-foreground border-t border-border/40 w-full max-w-lg">
   {/* 1. Weekly Updates */}
   <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap text-red-600 dark:text-red-400 font-medium">
-    <svg className="w-3.5 h-3.5 animate-spin text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg className="w-3.5 h-3.5 animate-spin text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
     </svg>
     <span className="font-mono text-foreground">Weekly Updates</span>
   </div>
 
-  <div className="h-3 w-px bg-border/60 shrink-0" />
+  <div className="h-3 w-px bg-border/60 shrink-0 hidden xs:block" />
 
   {/* 2. Readers Active */}
   <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
-    <svg className="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+    <svg className="w-3.5 h-3.5 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
       <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
     </svg>
     <span>
       <strong className="font-semibold text-foreground font-mono transition-all">
         {mounted ? readersCount.toLocaleString() : "10,420"}
       </strong>{" "}
-       Active Users
+      Active Users
     </span>
   </div>
 
-  <div className="h-3 w-px bg-border/60 shrink-0" />
+  <div className="h-3 w-px bg-border/60 shrink-0 hidden xs:block" />
 
   {/* 3. Articles */}
   <div className="shrink-0 whitespace-nowrap">

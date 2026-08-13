@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FaPlay, FaPause, FaSquare } from "react-icons/fa6";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
+import { showToast } from "@/helper/showToast";
 
 const TextToSpeech = ({ textToRead, title = "Article" }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -11,14 +12,18 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
   const [isSupported, setIsSupported] = useState(true);
 
   const synthRef = useRef(null);
-  const utteranceRef = useRef(null);
-  const charIndexRef = useRef(0);
-  const timerRef = useRef(null);
-  const startTimeRef = useRef(0);
+  const chunksRef = useRef([]);
+  const currentChunkIndexRef = useRef(0);
+  const rateRef = useRef(rate);
+
+  useEffect(() => {
+    rateRef.current = rate;
+  }, [rate]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       synthRef.current = window.speechSynthesis;
+      setIsSupported(true);
 
       const loadVoices = () => {
         if (synthRef.current) {
@@ -38,20 +43,11 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       if (synthRef.current) {
         synthRef.current.cancel();
       }
-      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
 
-  const clearProgressTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  };
-
-  const getPlainText = (htmlOrText) => {
-    if (!htmlOrText) return "";
-
+  const prepareChunks = (htmlOrText) => {
+    if (!htmlOrText) return [];
     try {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = htmlOrText;
@@ -64,22 +60,29 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       const codeBlocks = tempDiv.querySelectorAll("pre, code");
       codeBlocks.forEach((codeEl) => {
         const placeholder = document.createElement("span");
-        placeholder.innerText = ". [Code snippet shown in post]. ";
+        placeholder.innerText = ". Code snippet shown in post. ";
         codeEl.parentNode?.replaceChild(placeholder, codeEl);
       });
 
       let text = tempDiv.textContent || tempDiv.innerText || "";
       text = text.replace(/\s+/g, " ").trim();
 
-      return text.length > 2000 ? text.slice(0, 2000) + "..." : text;
+      const fullText = `${title}. ${text}`.trim();
+      const sentences = fullText
+        .split(/(?<=[.!?])\s+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+      return sentences.length > 0 ? sentences : [fullText];
     } catch (e) {
-      return "";
+      return [];
     }
   };
 
+  // Best Voice Picker including iOS priority (Samantha/Daniel)
   const getBestVoice = () => {
     if (!synthRef.current) return null;
-    const voices = synthRef.current.getVoices();
+    let voices = synthRef.current.getVoices();
 
     if (!voices || voices.length === 0) return null;
 
@@ -87,10 +90,9 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       voices.find(
         (v) =>
           v.lang.startsWith("en") &&
-          (v.name.includes("David") ||
-            v.name.includes("Mark") ||
-            v.name.includes("Guy") ||
-            v.name.includes("Male") ||
+          (v.name.includes("Samantha") ||
+            v.name.includes("Daniel") ||
+            v.name.includes("David") ||
             v.name.includes("Google UK English Male"))
       ) ||
       voices.find((v) => v.lang.startsWith("en")) ||
@@ -98,22 +100,20 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
     );
   };
 
-  const startSpeaking = (currentRate, startFromIndex = 0) => {
+  const speakNextChunk = () => {
     if (!synthRef.current) return;
 
-    synthRef.current.cancel();
-    clearProgressTimer();
+    if (currentChunkIndexRef.current >= chunksRef.current.length) {
+      setIsPlaying(false);
+      setIsPaused(false);
+      currentChunkIndexRef.current = 0;
+      return;
+    }
 
-    const cleanBodyText = getPlainText(textToRead);
-    const fullText = `${title}. ${cleanBodyText}`.trim();
-
-    const textToSpeak =
-      startFromIndex > 0 ? fullText.slice(startFromIndex) : fullText;
-
-    if (!textToSpeak) return;
-
+    const textToSpeak = chunksRef.current[currentChunkIndexRef.current];
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.rate = currentRate;
+
+    utterance.rate = rateRef.current;
     utterance.pitch = 1.0;
 
     const bestVoice = getBestVoice();
@@ -121,94 +121,83 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       utterance.voice = bestVoice;
     }
 
-    // Backup 1: Standard boundary tracking (Desk / Native support)
-    utterance.onboundary = (event) => {
-      if (event.name === "word") {
-        charIndexRef.current = startFromIndex + event.charIndex;
-      }
-    };
-
-    // Backup 2: Mobile Fallback Timer (Average English speed ~15-18 chars/sec at 1x)
-    const charsPerSecond = 16 * currentRate;
-    startTimeRef.current = Date.now();
-
-    timerRef.current = setInterval(() => {
-      const elapsedSeconds = (Date.now() - startTimeRef.current) / 1000;
-      const estimatedCharsSpoken = Math.floor(elapsedSeconds * charsPerSecond);
-      const calculatedIndex = startFromIndex + estimatedCharsSpoken;
-
-      if (calculatedIndex < fullText.length) {
-        // Sirf tab update karein agar boundary se precise index na mil raha ho
-        charIndexRef.current = calculatedIndex;
-      }
-    }, 250);
-
     utterance.onend = () => {
-      clearProgressTimer();
-      setIsPlaying(false);
-      setIsPaused(false);
-      charIndexRef.current = 0;
-      utteranceRef.current = null;
+      currentChunkIndexRef.current += 1;
+      speakNextChunk();
     };
 
     utterance.onerror = (event) => {
-      clearProgressTimer();
       if (event.error === "canceled" || event.error === "interrupted") return;
       setIsPlaying(false);
       setIsPaused(false);
-      charIndexRef.current = 0;
-      utteranceRef.current = null;
     };
 
-    utteranceRef.current = utterance;
-
     synthRef.current.speak(utterance);
-    setIsPlaying(true);
-    setIsPaused(false);
   };
 
   const handlePlayPause = () => {
-    if (!synthRef.current || !isSupported) return;
+    // English Fallback if browser/webview speech engine is blocked
+    if (!isSupported || !synthRef.current) {
+      const msg = "Audio speech is not supported in this browser. Please open in Chrome or Safari.";
+      if (typeof showToast === "function") {
+        showToast("info", msg);
+      } else {
+        alert(msg);
+      }
+      return;
+    }
 
-    // 1. Pause
+    // Direct User Interaction Fix for iOS Safari
+    if (synthRef.current.getVoices().length === 0) {
+      synthRef.current.getVoices();
+    }
+
+    // 1. PAUSE
     if (isPlaying) {
-      clearProgressTimer();
       synthRef.current.cancel();
       setIsPlaying(false);
       setIsPaused(true);
       return;
     }
 
-    // 2. Resume (Starts directly from calculated charIndexRef)
+    // 2. RESUME
     if (isPaused) {
-      startSpeaking(rate, charIndexRef.current);
+      setIsPlaying(true);
+      setIsPaused(false);
+      speakNextChunk();
       return;
     }
 
-    // 3. Fresh Start
-    charIndexRef.current = 0;
-    startSpeaking(rate, 0);
+    // 3. FRESH START
+    const chunks = prepareChunks(textToRead);
+    if (chunks.length === 0) return;
+
+    chunksRef.current = chunks;
+    currentChunkIndexRef.current = 0;
+
+    setIsPlaying(true);
+    setIsPaused(false);
+    speakNextChunk();
   };
 
   const handleStop = () => {
     if (synthRef.current) {
-      clearProgressTimer();
       synthRef.current.cancel();
       setIsPlaying(false);
       setIsPaused(false);
-      charIndexRef.current = 0;
-      utteranceRef.current = null;
+      currentChunkIndexRef.current = 0;
     }
   };
 
   const handleSpeedChange = (newRate) => {
     setRate(newRate);
-    if (isPlaying || isPaused) {
-      startSpeaking(newRate, charIndexRef.current);
+    rateRef.current = newRate;
+
+    if (isPlaying) {
+      synthRef.current.cancel();
+      speakNextChunk();
     }
   };
-
-  if (!isSupported) return null;
 
   return (
     <div className="my-4 flex items-center justify-between gap-2 rounded-2xl border border-red-500/20 bg-red-500/5 p-2.5 sm:p-3 sm:px-4">
@@ -231,7 +220,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
         </div>
       </div>
 
-      {/* Controls Container */}
+      {/* Control Buttons */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         <button
           type="button"
@@ -264,7 +253,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
           </button>
         )}
 
-        {/* Speed Controls */}
+        {/* Playback Speed Controls */}
         <div className="flex items-center rounded-lg border border-border bg-background p-0.5 text-[10px] sm:text-[11px]">
           {[1, 1.25, 1.5].map((speed) => (
             <button
