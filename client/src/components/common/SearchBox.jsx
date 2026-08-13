@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation"; 
 import { RouteSearch } from "@/helper/RouteName";
 
-const SearchBox = () => {
+const SearchBox = ({ onSearchSubmit }) => {
   const router = useRouter(); 
   const [query, setQuery] = useState("");
 
@@ -19,7 +19,13 @@ const SearchBox = () => {
     if (cleanQuery) {
       // Direct cleanQuery pass karein, RouteSearch function query param handle karega
       router.push(RouteSearch(cleanQuery));
+
+      if (onSearchSubmit) {
+        onSearchSubmit();
+      }
     }
+
+
   };
 
   return (

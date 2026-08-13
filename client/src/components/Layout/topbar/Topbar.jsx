@@ -106,7 +106,7 @@ const Topbar = () => {
       : "opacity-0 -translate-y-3 invisible pointer-events-none"
   }`}
 >
-  <SearchBox />
+  <SearchBox onSearchSubmit={() => setShowSearch(false)} />
 </div>
 
         {/* Right Side Actions */}
