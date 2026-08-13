@@ -13,6 +13,8 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
   const synthRef = useRef(null);
   const utteranceRef = useRef(null);
   const charIndexRef = useRef(0);
+  const timerRef = useRef(null);
+  const startTimeRef = useRef(0);
 
   useEffect(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -36,10 +38,17 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       if (synthRef.current) {
         synthRef.current.cancel();
       }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
 
-  // Smart Plain Text Extractor & Length Limit Fix
+  const clearProgressTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
   const getPlainText = (htmlOrText) => {
     if (!htmlOrText) return "";
 
@@ -62,7 +71,6 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       let text = tempDiv.textContent || tempDiv.innerText || "";
       text = text.replace(/\s+/g, " ").trim();
 
-      // Mobile Safari / Chrome safeguard for text length
       return text.length > 2000 ? text.slice(0, 2000) + "..." : text;
     } catch (e) {
       return "";
@@ -75,7 +83,6 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
 
     if (!voices || voices.length === 0) return null;
 
-    // Search specifically for male voice profiles across Mobile & Desktop
     return (
       voices.find(
         (v) =>
@@ -95,6 +102,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
     if (!synthRef.current) return;
 
     synthRef.current.cancel();
+    clearProgressTimer();
 
     const cleanBodyText = getPlainText(textToRead);
     const fullText = `${title}. ${cleanBodyText}`.trim();
@@ -113,14 +121,30 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       utterance.voice = bestVoice;
     }
 
-    // Mobile boundary event for tracking active position
+    // Backup 1: Standard boundary tracking (Desk / Native support)
     utterance.onboundary = (event) => {
       if (event.name === "word") {
         charIndexRef.current = startFromIndex + event.charIndex;
       }
     };
 
+    // Backup 2: Mobile Fallback Timer (Average English speed ~15-18 chars/sec at 1x)
+    const charsPerSecond = 16 * currentRate;
+    startTimeRef.current = Date.now();
+
+    timerRef.current = setInterval(() => {
+      const elapsedSeconds = (Date.now() - startTimeRef.current) / 1000;
+      const estimatedCharsSpoken = Math.floor(elapsedSeconds * charsPerSecond);
+      const calculatedIndex = startFromIndex + estimatedCharsSpoken;
+
+      if (calculatedIndex < fullText.length) {
+        // Sirf tab update karein agar boundary se precise index na mil raha ho
+        charIndexRef.current = calculatedIndex;
+      }
+    }, 250);
+
     utterance.onend = () => {
+      clearProgressTimer();
       setIsPlaying(false);
       setIsPaused(false);
       charIndexRef.current = 0;
@@ -128,6 +152,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
     };
 
     utterance.onerror = (event) => {
+      clearProgressTimer();
       if (event.error === "canceled" || event.error === "interrupted") return;
       setIsPlaying(false);
       setIsPaused(false);
@@ -145,15 +170,16 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
   const handlePlayPause = () => {
     if (!synthRef.current || !isSupported) return;
 
-    // 1. If currently playing -> PAUSE
+    // 1. Pause
     if (isPlaying) {
-      synthRef.current.cancel(); // Mobile safe pause
+      clearProgressTimer();
+      synthRef.current.cancel();
       setIsPlaying(false);
       setIsPaused(true);
       return;
     }
 
-    // 2. If paused -> RESUME (Restarts exactly from last paused word)
+    // 2. Resume (Starts directly from calculated charIndexRef)
     if (isPaused) {
       startSpeaking(rate, charIndexRef.current);
       return;
@@ -166,6 +192,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
 
   const handleStop = () => {
     if (synthRef.current) {
+      clearProgressTimer();
       synthRef.current.cancel();
       setIsPlaying(false);
       setIsPaused(false);
@@ -189,7 +216,9 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
       <div className="flex items-center gap-2 min-w-0 shrink">
         <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-xs">
           <HiMiniSpeakerWave
-            className={`text-base sm:text-lg ${isPlaying ? "animate-pulse" : ""}`}
+            className={`text-base sm:text-lg ${
+              isPlaying ? "animate-pulse" : ""
+            }`}
           />
         </div>
         <div className="min-w-0">
@@ -202,7 +231,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
         </div>
       </div>
 
-      {/* Controls Container - Forced Single Line */}
+      {/* Controls Container */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         <button
           type="button"
