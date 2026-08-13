@@ -41,7 +41,7 @@ const SearchResultsContent = () => {
           style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}
         >
           {blogData && blogData?.blog?.length > 0 ? (
-            blogData.blog.map((blog) => <BlogCard key={blog._id} props={blog} />)
+            blogData.blog.map((blog) => <BlogCard key={blog._id} blog={blog} />)
           ) : (
             <p className="text-slate-500 font-medium py-10">Data Not Found</p>
           )}

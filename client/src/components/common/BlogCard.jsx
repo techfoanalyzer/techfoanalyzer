@@ -7,8 +7,6 @@ import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import Link from "next/link";
 
 const BlogCard = ({ blog }) => {
-
-  console.log(blog);
   
   return (
     <Link href={`/blogs/${blog?.category?.slug}/${blog?.slug}`} className="group block">
