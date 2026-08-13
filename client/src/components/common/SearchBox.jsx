@@ -17,7 +17,6 @@ const SearchBox = ({ onSearchSubmit }) => {
     e.preventDefault();
     const cleanQuery = query.trim();
     if (cleanQuery) {
-      // Direct cleanQuery pass karein, RouteSearch function query param handle karega
       router.push(RouteSearch(cleanQuery));
 
       if (onSearchSubmit) {

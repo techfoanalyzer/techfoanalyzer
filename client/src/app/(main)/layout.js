@@ -14,7 +14,7 @@ export default async function MainLayout({ children }) {
       <Topbar />
 
       <main className="w-full flex flex-col justify-between min-h-screen">
-        <div className="w-full flex-1 pt-5 px-2 md:px-1">
+        <div className="w-full flex-1 pt-5 px-2 md:px-1  min-h-screen">
           {children}
         </div>
         <Footer />
