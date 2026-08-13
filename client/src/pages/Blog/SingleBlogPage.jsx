@@ -10,6 +10,7 @@ import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-light.css";
+import TextToSpeech from "@/components/common/TextToSpeech";
 
 const SingleBlogPage = ({ blogData, related, category }) => {
   const contentRef = useRef(null);
@@ -182,6 +183,11 @@ useEffect(() => {
                   className="w-full aspect-video object-cover rounded-xl shadow-sm"
                 />
               </div>
+
+              <TextToSpeech 
+        title={blogData?.blog?.tittle} 
+        textToRead={blogData?.blog?.blogContent} // Blog HTML/Markdown string
+      />
 
               <div
                 ref={contentRef}
