@@ -68,22 +68,27 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
     }
   };
 
-  const getBestVoice = () => {
-    if (!synthRef.current) return null;
-    const voices = synthRef.current.getVoices();
+const getBestVoice = () => {
+  if (!synthRef.current) return null;
+  const voices = synthRef.current.getVoices();
 
-    if (!voices || voices.length === 0) return null;
+  if (!voices || voices.length === 0) return null;
 
-    // Mobile Specific Priority: Google, Natural, or Default Active English Voice
-    return (
-      voices.find((v) => v.lang.startsWith("en") && v.name.includes("Google")) ||
-      voices.find((v) => v.lang.startsWith("en") && v.name.includes("Natural")) ||
-      voices.find((v) => v.lang.startsWith("en") && v.default) ||
-      voices.find((v) => v.lang.startsWith("en")) ||
-      voices[0]
-    );
-  };
-
+  // Search specifically for male voice profiles across Mobile & Desktop
+  return (
+    voices.find(
+      (v) =>
+        v.lang.startsWith("en") &&
+        (v.name.includes("David") ||
+          v.name.includes("Mark") ||
+          v.name.includes("Guy") ||
+          v.name.includes("Male") ||
+          v.name.includes("Google UK English Male"))
+    ) ||
+    voices.find((v) => v.lang.startsWith("en")) ||
+    voices[0]
+  );
+};
   const startSpeaking = (currentRate) => {
     if (!synthRef.current) return;
 

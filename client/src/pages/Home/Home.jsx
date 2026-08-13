@@ -150,7 +150,7 @@ const HomePage = ({ blogData }) => {
       <strong className="font-semibold text-foreground font-mono transition-all">
         {mounted ? readersCount.toLocaleString() : "10,420"}
       </strong>{" "}
-      Readers Active
+       Active Users
     </span>
   </div>
 

@@ -109,7 +109,7 @@ const DictionaryModal = ({ isOpen, onClose }) => {
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" />
             <Input
               type="text"
-              placeholder="Word likhein (e.g. Hello, API, Database)..."
+              placeholder="Enter a word (e.g., Hello, API, Database)..."
               value={word}
               onChange={(e) => setWord(e.target.value)}
               className="pl-9 text-sm"
