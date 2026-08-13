@@ -87,7 +87,7 @@ const DictionaryModal = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-4">
           <div className="flex items-center gap-2">
             <FiBookOpen className="text-red-600 size-5" />
-            <h3 className="font-bold text-lg">Tech & Urdu Dictionary</h3>
+            <h3 className="font-bold text-lg">TechfoAnalyzer Dictionary</h3>
           </div>
           <button
             onClick={onClose}

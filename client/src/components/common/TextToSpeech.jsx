@@ -12,6 +12,7 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
 
   const synthRef = useRef(null);
   const utteranceRef = useRef(null);
+  const charIndexRef = useRef(0);
 
   useEffect(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -68,39 +69,42 @@ const TextToSpeech = ({ textToRead, title = "Article" }) => {
     }
   };
 
-const getBestVoice = () => {
-  if (!synthRef.current) return null;
-  const voices = synthRef.current.getVoices();
+  const getBestVoice = () => {
+    if (!synthRef.current) return null;
+    const voices = synthRef.current.getVoices();
 
-  if (!voices || voices.length === 0) return null;
+    if (!voices || voices.length === 0) return null;
 
-  // Search specifically for male voice profiles across Mobile & Desktop
-  return (
-    voices.find(
-      (v) =>
-        v.lang.startsWith("en") &&
-        (v.name.includes("David") ||
-          v.name.includes("Mark") ||
-          v.name.includes("Guy") ||
-          v.name.includes("Male") ||
-          v.name.includes("Google UK English Male"))
-    ) ||
-    voices.find((v) => v.lang.startsWith("en")) ||
-    voices[0]
-  );
-};
-  const startSpeaking = (currentRate) => {
+    // Search specifically for male voice profiles across Mobile & Desktop
+    return (
+      voices.find(
+        (v) =>
+          v.lang.startsWith("en") &&
+          (v.name.includes("David") ||
+            v.name.includes("Mark") ||
+            v.name.includes("Guy") ||
+            v.name.includes("Male") ||
+            v.name.includes("Google UK English Male"))
+      ) ||
+      voices.find((v) => v.lang.startsWith("en")) ||
+      voices[0]
+    );
+  };
+
+  const startSpeaking = (currentRate, startFromIndex = 0) => {
     if (!synthRef.current) return;
 
-    // Direct cancel call
     synthRef.current.cancel();
 
     const cleanBodyText = getPlainText(textToRead);
-    const cleanText = `${title}. ${cleanBodyText}`.trim();
+    const fullText = `${title}. ${cleanBodyText}`.trim();
 
-    if (!cleanText) return;
+    const textToSpeak =
+      startFromIndex > 0 ? fullText.slice(startFromIndex) : fullText;
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
+    if (!textToSpeak) return;
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.rate = currentRate;
     utterance.pitch = 1.0;
 
@@ -109,9 +113,17 @@ const getBestVoice = () => {
       utterance.voice = bestVoice;
     }
 
+    // Mobile boundary event for tracking active position
+    utterance.onboundary = (event) => {
+      if (event.name === "word") {
+        charIndexRef.current = startFromIndex + event.charIndex;
+      }
+    };
+
     utterance.onend = () => {
       setIsPlaying(false);
       setIsPaused(false);
+      charIndexRef.current = 0;
       utteranceRef.current = null;
     };
 
@@ -119,12 +131,12 @@ const getBestVoice = () => {
       if (event.error === "canceled" || event.error === "interrupted") return;
       setIsPlaying(false);
       setIsPaused(false);
+      charIndexRef.current = 0;
       utteranceRef.current = null;
     };
 
     utteranceRef.current = utterance;
 
-    // Direct execution for Mobile Touch Context (Removed delayed setTimeout)
     synthRef.current.speak(utterance);
     setIsPlaying(true);
     setIsPaused(false);
@@ -133,24 +145,23 @@ const getBestVoice = () => {
   const handlePlayPause = () => {
     if (!synthRef.current || !isSupported) return;
 
-    // 1. Resume if paused
-    if (isPaused) {
-      synthRef.current.resume();
-      setIsPlaying(true);
-      setIsPaused(false);
-      return;
-    }
-
-    // 2. Pause if playing
+    // 1. If currently playing -> PAUSE
     if (isPlaying) {
-      synthRef.current.pause();
+      synthRef.current.cancel(); // Mobile safe pause
       setIsPlaying(false);
       setIsPaused(true);
       return;
     }
 
-    // 3. Start speech
-    startSpeaking(rate);
+    // 2. If paused -> RESUME (Restarts exactly from last paused word)
+    if (isPaused) {
+      startSpeaking(rate, charIndexRef.current);
+      return;
+    }
+
+    // 3. Fresh Start
+    charIndexRef.current = 0;
+    startSpeaking(rate, 0);
   };
 
   const handleStop = () => {
@@ -158,6 +169,7 @@ const getBestVoice = () => {
       synthRef.current.cancel();
       setIsPlaying(false);
       setIsPaused(false);
+      charIndexRef.current = 0;
       utteranceRef.current = null;
     }
   };
@@ -165,13 +177,13 @@ const getBestVoice = () => {
   const handleSpeedChange = (newRate) => {
     setRate(newRate);
     if (isPlaying || isPaused) {
-      startSpeaking(newRate);
+      startSpeaking(newRate, charIndexRef.current);
     }
   };
 
   if (!isSupported) return null;
 
- return (
+  return (
     <div className="my-4 flex items-center justify-between gap-2 rounded-2xl border border-red-500/20 bg-red-500/5 p-2.5 sm:p-3 sm:px-4">
       {/* Label & Icon */}
       <div className="flex items-center gap-2 min-w-0 shrink">
