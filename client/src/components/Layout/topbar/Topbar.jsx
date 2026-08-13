@@ -32,7 +32,7 @@ import DictionaryModal from "@/components/common/DictionaryModal";
 
 const Topbar = () => {
   const { user, isLoggedIn, isHydrated, removeUser } = useUserStore();
-  const [showSearch, setshowSearch] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [isDictOpen, setIsDictOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
   const router = useRouter();
@@ -41,7 +41,7 @@ const Topbar = () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (response.data.success) {
@@ -50,7 +50,7 @@ const Topbar = () => {
     } catch (error) {
       console.log(
         "Logout API error:",
-        error?.response?.data?.message || error.message
+        error?.response?.data?.message || error.message,
       );
       showToast("info", "Logged out locally.");
     } finally {
@@ -60,7 +60,7 @@ const Topbar = () => {
   };
 
   const toggleSearch = () => {
-    setshowSearch(!showSearch);
+    setShowSearch((prev) => !prev);
   };
 
   return (
@@ -75,7 +75,7 @@ const Topbar = () => {
           >
             <RiMenuFold2Fill size={20} />
           </button>
-          <Link href={"/"} className="w-44  md:w-52 flex items-center shrink">
+          <Link href={"/"} className="w-40 md:w-52 flex items-center shrink">
             <img
               src={textlogo.src || textlogo}
               alt="Logo"
@@ -90,13 +90,24 @@ const Topbar = () => {
         </div>
 
         {/* Mobile Search Overlay Input */}
-        <div
-          className={`absolute left-0 w-full top-16 bg-white dark:bg-zinc-950 p-4 border-b border-zinc-200 dark:border-zinc-800 md:hidden transition-all ${
-            showSearch ? "block" : "hidden"
-          }`}
-        >
-          <SearchBox />
-        </div>
+       {/* 1. Backdrop Overlay (Dark screen) */}
+<div
+  onClick={() => setShowSearch(false)}
+  className={`fixed inset-0 top-16 z-40 bg-black/60 backdrop-blur-sm md:hidden transition-opacity duration-300 ${
+    showSearch ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+  }`}
+/>
+
+{/* 2. Floating Search Field (No White Card/Strip) */}
+<div
+  className={`absolute left-0 top-16 z-50 w-full px-4 pt-3 pb-2 md:hidden transition-all duration-300 ease-out ${
+    showSearch
+      ? "opacity-100 translate-y-1 visible"
+      : "opacity-0 -translate-y-3 invisible pointer-events-none"
+  }`}
+>
+  <SearchBox />
+</div>
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
@@ -140,9 +151,12 @@ const Topbar = () => {
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 animate-pulse shrink-0" />
           ) : !isLoggedIn ? (
             <Link href={"/sign-in"} className="shrink-0">
-              <Button size="sm" className="rounded-full gap-1 font-medium px-2.5 sm:px-4 text-xs sm:text-sm h-8 sm:h-9">
-                <PiSignIn className="text-sm sm:text-base shrink-0" />
-                <span>Sign-In</span>
+              <Button
+                size="sm"
+                className="rounded-full gap-0.5 sm:gap-1 font-medium px-2 sm:px-4 text-[11px] sm:text-sm h-7 sm:h-9 shrink-0 max-w-full"
+              >
+                <PiSignIn className="text-xs sm:text-base shrink-0" />
+                <span className="truncate">Sign-In</span>
               </Button>
             </Link>
           ) : (
@@ -150,7 +164,7 @@ const Topbar = () => {
               <DropdownMenuTrigger className="outline-none cursor-pointer rounded-full ring-offset-background transition-shadow focus-visible:ring-2 focus-visible:ring-ring shrink-0">
                 <Avatar className="h-8 w-8 sm:h-9 sm:w-9 border border-zinc-200 dark:border-zinc-800">
                   <AvatarImage
-                    src={user?.user?.avatar || userIcon}
+                    src={user?.user?.avatar || userIcon.src || userIcon}
                     className="object-cover"
                   />
                   <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-xs font-semibold">
