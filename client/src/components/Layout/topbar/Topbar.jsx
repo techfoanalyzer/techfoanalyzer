@@ -75,7 +75,7 @@ const Topbar = () => {
           >
             <RiMenuFold2Fill size={20} />
           </button>
-          <Link href={"/"} className="w-28 xs:w-36 sm:w-44 md:w-52 flex items-center shrink">
+          <Link href={"/"} className="w-44  md:w-52 flex items-center shrink">
             <img
               src={textlogo.src || textlogo}
               alt="Logo"

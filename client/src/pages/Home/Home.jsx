@@ -130,16 +130,19 @@ const HomePage = ({ blogData }) => {
             </div>
 
             {/* Live Metrics Bar */}
-<div className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-6 pt-2 text-xs text-muted-foreground border-t border-border/40 w-full max-w-lg">
+<div className="flex items-center gap-x-2.5 sm:gap-6 pt-2 text-[11px] sm:text-xs text-muted-foreground border-t border-border/40 w-full max-w-lg overflow-x-auto whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
   {/* 1. Weekly Updates */}
   <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap text-red-600 dark:text-red-400 font-medium">
-    <svg className="w-3.5 h-3.5 animate-spin text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-    </svg>
+    {/* Isolated wrapper prevents rotation 1px leakage that causes blinking */}
+    <div className="w-3.5 h-3.5 overflow-hidden flex items-center justify-center shrink-0">
+      <svg className="w-3.5 h-3.5 animate-spin text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    </div>
     <span className="font-mono text-foreground">Weekly Updates</span>
   </div>
 
-  <div className="h-3 w-px bg-border/60 shrink-0 hidden xs:block" />
+  <div className="h-3 w-px bg-border/60 shrink-0" />
 
   {/* 2. Readers Active */}
   <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
@@ -154,7 +157,7 @@ const HomePage = ({ blogData }) => {
     </span>
   </div>
 
-  <div className="h-3 w-px bg-border/60 shrink-0 hidden xs:block" />
+  <div className="h-3 w-px bg-border/60 shrink-0" />
 
   {/* 3. Articles */}
   <div className="shrink-0 whitespace-nowrap">
