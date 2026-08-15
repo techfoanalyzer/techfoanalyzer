@@ -99,24 +99,27 @@ const Appsidebar = ({ categoryData }) => {
 
             {/* Comments (Logged-in User & Admin) */}
             {isHydrated && isLoggedIn && (
-              <SidebarMenuItem>
-                <Link href="/comments" onClick={handleLinkClick} className="w-full">
-                  <SidebarMenuButton className="relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
-                    <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
-                      <FaRegComments className="text-lg" />
-                    </div>
-                    <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">Comments</span>
-                  </SidebarMenuButton>
-                </Link>
-                 <Link href="/saved-blogs" onClick={handleLinkClick} className="w-full">
-                  <SidebarMenuButton className="relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
-                    <div className="p-2 rounded-lg bg-red-50 dark:bg-emerald-950/50 text-red-400 dark:text-red-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
-                      <PiBookmarksFill className="text-lg" />
-                    </div>
-                    <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">My Library</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
+              <SidebarMenuItem className="flex flex-col gap-1 w-full">
+
+  <Link href="/comments" onClick={handleLinkClick} className="w-full">
+    <SidebarMenuButton className="relative flex items-center gap-3 w-full h-auto px-3 py-1 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
+      <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
+        <FaRegComments className="text-lg" />
+      </div>
+      <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">Comments</span>
+    </SidebarMenuButton>
+  </Link>
+
+
+  <Link href="/saved-blogs" onClick={handleLinkClick} className="w-full">
+    <SidebarMenuButton className="relative flex items-center gap-3 w-full h-auto px-3 py-1 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
+      <div className="p-2 rounded-lg bg-red-50 dark:bg-red-950/50 text-red-500 dark:text-red-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
+        <PiBookmarksFill className="text-lg" />
+      </div>
+      <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">My Library</span>
+    </SidebarMenuButton>
+  </Link>
+</SidebarMenuItem>
               
              )} 
 

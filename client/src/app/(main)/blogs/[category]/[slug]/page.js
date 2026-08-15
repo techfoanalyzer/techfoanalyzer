@@ -2,7 +2,7 @@ import { BlogPage, RelatedBlog } from "@/apiServices/BlogPage/BlogPage";
 import SingleBlogPage from "@/pages/Blog/SingleBlogPage";
 import { notFound } from "next/navigation";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.techfoanalyzer.com";
