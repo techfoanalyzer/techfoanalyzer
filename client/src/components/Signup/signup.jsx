@@ -1,9 +1,9 @@
-'use client'
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PiUserPlus } from "react-icons/pi";
 import { z } from "zod";
-import logo from "@/assets/images/textLogo.png"
+import logo from "@/assets/images/textLogo.png";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -47,7 +47,7 @@ export const signupSchema = z
 const Signup = () => {
   const { setUser } = useUserStore();
   const navigate = useRouter();
-  
+
   // Form States
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -85,16 +85,20 @@ const Signup = () => {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`,
         backendData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (response.data.success) {
-        showToast("success", response.data.message || "OTP sent to your email!");
+        showToast(
+          "success",
+          response.data.message || "OTP sent to your email!",
+        );
         setShowOtpScreen(true); // Switch UI to OTP view
       }
     } catch (apiError) {
       console.error("API Error:", apiError);
-      const errorMsg = apiError.response?.data?.message || "Something went wrong";
+      const errorMsg =
+        apiError.response?.data?.message || "Something went wrong";
       setError(errorMsg);
       showToast("error", errorMsg);
     } finally {
@@ -118,18 +122,18 @@ const Signup = () => {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/verify-otp`,
         { email, otp },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (response.data.success) {
         const data = response.data;
         showToast("success", data.message || "Account verified successfully!");
-      
-        
-        
+
         // Update user state & redirect home
         if (data.user) setUser(data.user);
-        navigate.push('/');
+        setTimeout(() => {
+          navigate.push("/");
+        }, 150);
 
         // Clear Form
         setName("");
@@ -140,10 +144,10 @@ const Signup = () => {
       }
     } catch (apiError) {
       console.error("OTP Verification Error:", apiError);
-      const errorMsg = apiError.response?.data?.message || "Invalid or expired OTP.";
+      const errorMsg =
+        apiError.response?.data?.message || "Invalid or expired OTP.";
       setError(errorMsg);
       showToast("error", errorMsg);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -156,15 +160,19 @@ const Signup = () => {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/resend-otp`,
-        { email }
+        { email },
       );
 
       if (response.data.success) {
-        showToast("success", response.data.message || "A new OTP has been sent!");
+        showToast(
+          "success",
+          response.data.message || "A new OTP has been sent!",
+        );
       }
     } catch (apiError) {
       console.error("Resend OTP Error:", apiError);
-      const errorMsg = apiError.response?.data?.message || "Failed to resend OTP.";
+      const errorMsg =
+        apiError.response?.data?.message || "Failed to resend OTP.";
       setError(errorMsg);
       showToast("error", errorMsg);
     } finally {
@@ -176,7 +184,7 @@ const Signup = () => {
     <>
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-12 dark:bg-zinc-950">
         <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <Link href={'/'}>
+          <Link href={"/"}>
             <div className="flex justify-center items-center mb-4">
               <Image src={logo} priority className="w-56" alt="Logo" />
             </div>
@@ -196,10 +204,12 @@ const Signup = () => {
           {!showOtpScreen && (
             <>
               <div>
-                <GoogleLogin/>
+                <GoogleLogin />
               </div>
-              <div className="w-full flex justify-center items-center border my-5 relative"> 
-                <span className="absolute bg-white dark:bg-zinc-900 px-2 text-xs text-zinc-400">Or</span>
+              <div className="w-full flex justify-center items-center border my-5 relative">
+                <span className="absolute bg-white dark:bg-zinc-900 px-2 text-xs text-zinc-400">
+                  Or
+                </span>
               </div>
             </>
           )}
@@ -250,7 +260,7 @@ const Signup = () => {
                 >
                   Password
                 </label>
-                
+
                 <div className="relative">
                   <Input
                     id="password"
@@ -348,16 +358,18 @@ const Signup = () => {
                 <span>{isLoading ? "Verifying..." : "Verify & Complete"}</span>
               </Button>
 
-               <div className="p-3.5 bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 rounded-xl text-xs text-amber-900 dark:text-amber-200 space-y-1">
-              <p className="font-semibold flex items-center gap-1.5">
-                <span>📩</span> Did you not receive the OTP Email?
-              </p>
-             <p className="leading-relaxed">
-  Sometimes emails don't land directly in your Inbox. If you don't see it, please check your <b>Spam</b> or <b>Junk</b> folder. Our emails are 100% secure, so no need to worry!
-</p>
-            </div>
-{/* -------------------------------------------------------- */}
-{/* <div className="mt-4 p-4 bg-amber-50/90 border border-amber-200 rounded-xl text-xs text-amber-900 shadow-sm">
+              <div className="p-3.5 bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 rounded-xl text-xs text-amber-900 dark:text-amber-200 space-y-1">
+                <p className="font-semibold flex items-center gap-1.5">
+                  <span>📩</span> Did you not receive the OTP Email?
+                </p>
+                <p className="leading-relaxed">
+                  Sometimes emails don't land directly in your Inbox. If you
+                  don't see it, please check your <b>Spam</b> or <b>Junk</b>{" "}
+                  folder. Our emails are 100% secure, so no need to worry!
+                </p>
+              </div>
+              {/* -------------------------------------------------------- */}
+              {/* <div className="mt-4 p-4 bg-amber-50/90 border border-amber-200 rounded-xl text-xs text-amber-900 shadow-sm">
   <div className="flex items-center gap-2 font-semibold text-amber-950 mb-2">
     <span>🛡️</span>
     <span>Can&apos;t find your OTP? Don&apos;t worry, you are completely safe!</span>
@@ -378,9 +390,7 @@ const Signup = () => {
     </li>
   </ul>
 </div> */}
-{/* ----------------------------------------------------------------- */}
-
-
+              {/* ----------------------------------------------------------------- */}
 
               <div className="flex items-center justify-between mt-4 text-xs">
                 <button
@@ -397,7 +407,9 @@ const Signup = () => {
                   disabled={isResending || isLoading}
                   className="flex items-center gap-1 font-medium text-primary hover:underline disabled:opacity-50"
                 >
-                  <RefreshCw className={`h-3 w-3 ${isResending ? "animate-spin" : ""}`} />
+                  <RefreshCw
+                    className={`h-3 w-3 ${isResending ? "animate-spin" : ""}`}
+                  />
                   <span>{isResending ? "Sending..." : "Resend OTP"}</span>
                 </button>
               </div>
@@ -407,7 +419,7 @@ const Signup = () => {
           <p className="mt-6 text-center text-xs text-zinc-500 dark:text-zinc-400">
             Already have an account?{" "}
             <Link
-              href={'/sign-in'}
+              href={"/sign-in"}
               className="font-medium text-primary hover:underline"
             >
               Sign in
