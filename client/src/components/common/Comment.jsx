@@ -24,12 +24,15 @@ const Comment = ({ props }) => {
   const { user, isLoggedIn, isHydrated } = useUserStore();
   const [callComment, setcallComment] = useState(null);
 
+  const blogid = props?.blogid;
+  const currentUser = user?.user || user;
+  const userId = currentUser?._id;
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    watch, // Textarea state sync rakhne ke liye
   } = useForm({
     resolver: zodResolver(slugFormSchema),
     defaultValues: {
@@ -40,7 +43,7 @@ const Comment = ({ props }) => {
   const onSubmit = async (data) => {
     if (!isHydrated) return;
 
-    if (!isLoggedIn || !user?.user?._id) {
+    if (!isLoggedIn || !userId) {
       showToast("error", "Please Login to Your Account");
       return;
     }
@@ -48,8 +51,8 @@ const Comment = ({ props }) => {
     try {
       const newData = { 
         ...data, 
-        blogid: props?.blogid, 
-        user: user.user._id 
+        blogid, 
+        user: userId 
       };
 
       const response = await axios.post(
@@ -62,10 +65,16 @@ const Comment = ({ props }) => {
         const resData = response.data;
         showToast("success", resData.message || "Comment added successfully");
         
-        // Pass fresh state reference
-        setcallComment(resData.comment || { ...newData, createdAt: new Date() });
+        // Pass complete fallback structure for instant UI update
+        const freshComment = resData.comment || { 
+          ...newData, 
+          user: currentUser, 
+          createdAt: new Date().toISOString() 
+        };
 
-        // Clean Reset (Watch value sync hone ki waja se DOM aur React state dono empty hongay)
+        setcallComment(freshComment);
+
+        // Clean Reset
         reset({ comment: "" });
       }
     } catch (error) {
@@ -90,7 +99,6 @@ const Comment = ({ props }) => {
               placeholder="Type your Comment Here..."
               className="resize-none pt-5 border border-gray-300 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:border-gray-600"
               {...register("comment")}
-              value={watch("comment") || ""}
             />
             {errors.comment && (
               <p className="text-xs text-destructive font-medium mt-1">
@@ -112,7 +120,7 @@ const Comment = ({ props }) => {
       <div className="border-t mt-5 pt-5">
         <CommentList
           className="mt-5"
-          props={{ blogid: props?.blogid, callComment }}
+          props={{ blogid, callComment }}
         />
       </div>
     </div>
