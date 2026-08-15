@@ -65,7 +65,7 @@ const page = async () => {
   
   
   return (
-    <div>
+    <div >
       <HomePage blogData={AllBlogs}/>
     </div>
   )

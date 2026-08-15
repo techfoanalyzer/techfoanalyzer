@@ -23,6 +23,8 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { LuInfo, LuMail } from "react-icons/lu";
 import { useUserStore } from "@/store/userStore";
+import { PiBookmarksFill } from "react-icons/pi";
+
 
 const Appsidebar = ({ categoryData }) => {
   const { user, isLoggedIn, isHydrated } = useUserStore();
@@ -37,7 +39,7 @@ const Appsidebar = ({ categoryData }) => {
   return (
     <Sidebar className="border-r border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950">
       {/* Header / Logo */}
-      <SidebarHeader className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
+      <SidebarHeader className="px-5 py-3 md:py-4 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
         <Link 
           href="/" 
           onClick={handleLinkClick} 
@@ -47,14 +49,14 @@ const Appsidebar = ({ categoryData }) => {
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-4 space-y-4 overflow-y-auto bg-white dark:bg-slate-950">
+      <SidebarContent className="px-3 py-4 space-y-3 overflow-y-auto bg-white dark:bg-slate-950">
         {/* Main Navigation Section */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-3 mb-2">
             Main Navigation
           </SidebarGroupLabel>
 
-          <SidebarMenu className="space-y-1">
+          <SidebarMenu className="space-y-2">
             {/* Home */}
             <SidebarMenuItem>
               <Link href="/" onClick={handleLinkClick} className="w-full">
@@ -106,8 +108,17 @@ const Appsidebar = ({ categoryData }) => {
                     <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">Comments</span>
                   </SidebarMenuButton>
                 </Link>
+                 <Link href="/saved-blogs" onClick={handleLinkClick} className="w-full">
+                  <SidebarMenuButton className="relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
+                    <div className="p-2 rounded-lg bg-red-50 dark:bg-emerald-950/50 text-red-400 dark:text-red-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
+                      <PiBookmarksFill className="text-lg" />
+                    </div>
+                    <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">My Library</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
-            )}
+              
+             )} 
 
             {/* Users (Only Admin) */}
             {isHydrated && (user?.role === "admin" || user?.user?.role === "admin") && (

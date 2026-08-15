@@ -117,8 +117,11 @@ const blogDetailPage = async ({ params }) => {
     "@type": "BlogPosting",
     headline: blog?.tittle,
     description: rawDescription,
-    image: blog?.featureImage || `${SITE_URL}/default-blog.jpg`,
+   image: [
+    blog?.featureImage || `${SITE_URL}/default-blog.jpg`
+  ],
     datePublished: blog?.createdAt,
+    dateModified: blog?.updatedAt || blog?.createdAt,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": postUrl,

@@ -87,13 +87,21 @@ const PrivacyPolicy = () => {
     never request or store your Google account password.
   </li>
   <li>
-    <strong>User Activity & Interactions:</strong> When logged in, we securely
-    store interactions you perform on our blogs—such as comments posted
-    (including post details and timestamps) and liked articles. You retain full
-    control to view, manage, or delete your past comments at any time.
-    Additional features, such as bookmarking posts for a saved reading list,
-    may be introduced in future updates.
-  </li>
+  <strong>User Activity & Personal Library:</strong> When you are logged into Techfo Analyzer, we securely process and store your account interactions to provide personalized features:
+  
+  <ul className="list-disc pl-6 my-2 space-y-1">
+    <li>
+      <strong>Comments:</strong> We store your posted comments, associated post details, and timestamps.
+    </li>
+    <li>
+      <strong>Personal Library (Bookmarks):</strong> We save the articles you add to your library so you can access your saved reading list anytime.
+    </li>
+  </ul>
+
+  <p className="mt-2">
+    You have full ownership and control over your data: you can view, remove, or manage saved articles from your library and delete your comments at any time.
+  </p>
+</li>
 </ul>
           </section>
 

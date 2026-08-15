@@ -124,7 +124,7 @@ const Signup = () => {
       if (response.data.success) {
         const data = response.data;
         showToast("success", data.message || "Account verified successfully!");
-        // console.log(data);
+      
         
         
         // Update user state & redirect home

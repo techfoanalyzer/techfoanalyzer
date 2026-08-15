@@ -14,6 +14,7 @@ import TextToSpeech from "@/components/common/TextToSpeech";
 
 const SingleBlogPage = ({ blogData, related, category }) => {
   const contentRef = useRef(null);
+  
 
   // 1. Mobile & Narrow Viewport Pre-Scale Effect
   useEffect(() => {
@@ -171,7 +172,7 @@ useEffect(() => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 w-full sm:w-auto justify-end border-t sm:border-t-0 pt-2 sm:pt-0">
-                  <LikeCount props={{ blogid: blogData.blog._id }} />
+                  <LikeCount props={{ blogid: blogData.blog._id , categoryid: blogData.blog.category._id }} />
                   <CommentCount props={{ blogid: blogData.blog._id }} />
                 </div>
               </div>

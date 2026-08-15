@@ -7,12 +7,12 @@ import { MdVerified } from "react-icons/md";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import Link from "next/link";
 
-const BlogCard = ({ blog , categoryname }) => {
+const SavedBlogCard = ({ blog , categoryname }) => {
   
   
 
   return (
-    <Link href={`/blogs/${blog?.category?.slug}/${blog?.slug}`} className="group block">
+    <Link href={`/blogs/${categoryname?.slug}/${blog?.slug}`} className="group block">
       <Card className="pt-5 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md">
         <CardContent>
       
@@ -22,8 +22,8 @@ const BlogCard = ({ blog , categoryname }) => {
             <Avatar>
 
   <AvatarImage 
-    src={blog?.author?.avatar} 
-    alt={blog?.author?.name || "Author avatar"} 
+    src={defaultIcon.src || defaultIcon}
+    alt={blog?.tittle || "Author avatar"} 
   />
   <AvatarFallback className="bg-muted overflow-hidden">
     {defaultIcon ? (
@@ -56,7 +56,7 @@ const BlogCard = ({ blog , categoryname }) => {
           {/* Category Badge (Light Gray BG + Black Text) */}
           <div className="mt-4 mb-2">
             <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-900 border border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700">
-              {blog?.category?.name || category?.name || "Tech"}
+              {categoryname?.name || "Tech"}
             </span>
           </div>
 
@@ -76,4 +76,4 @@ const BlogCard = ({ blog , categoryname }) => {
   );
 };
 
-export default memo(BlogCard);
+export default memo(SavedBlogCard);
