@@ -4,6 +4,7 @@ import React, { Suspense } from "react"; // <--- Make sure Suspense is explicitl
 import BlogCard from "@/components/common/BlogCard";
 import { useAxios } from "@/helper/useAxios";
 import { useSearchParams } from "next/navigation"; 
+import { SearchX } from "lucide-react";
 
 const axiosOptions = {};
 
@@ -43,7 +44,24 @@ const SearchResultsContent = () => {
           {blogData && blogData?.blog?.length > 0 ? (
             blogData.blog.map((blog) => <BlogCard key={blog._id} blog={blog} />)
           ) : (
-            <p className="text-slate-500 font-medium py-10">Data Not Found</p>
+           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-center sm:text-left py-8 px-6 bg-slate-50/50 dark:bg-slate-900/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 my-6">
+  
+  {/* Icon Container */}
+  <div className="p-3.5 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400 dark:text-slate-500 shrink-0">
+    <SearchX className="w-6 h-6 sm:w-7 sm:h-7" />
+  </div>
+
+  {/* Text Content */}
+  <div className="space-y-1">
+    <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-200">
+      No Results Found
+    </h3>
+    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md">
+      We couldn't find anything matching your search. Try checking for spelling errors or using different keywords.
+    </p>
+  </div>
+
+</div>
           )}
         </div>
       )}
