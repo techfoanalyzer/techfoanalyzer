@@ -37,7 +37,7 @@ const SavedBlogCard = ({ blog , categoryname }) => {
     )}
   </AvatarFallback>
 </Avatar>
-              <span className="text-sm font-medium">{blog?.author?.name}</span>
+              <span className="text-sm font-medium">{blog?.author?.name || "TechfoAnalyzer"}</span>
             </div>
             
               <MdVerified className="size-5 text-red-600" />

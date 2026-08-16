@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,49 +7,45 @@ import { MdVerified } from "react-icons/md";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import Link from "next/link";
 
-const BlogCard = ({ blog , categoryname }) => {
-  
-  
-
+const BlogCard = ({ blog, categoryname }) => {
   return (
-    <Link href={`/blogs/${blog?.category?.slug}/${blog?.slug}`} className="group block">
+    <Link
+      href={`/blogs/${blog?.category?.slug}/${blog?.slug}`}
+      className="group block"
+    >
       <Card className="pt-5 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md">
         <CardContent>
-      
           <div className="flex justify-between items-center mx-1">
             <div className="flex gap-2 items-center">
-              
-            <Avatar>
-
-  <AvatarImage 
-    src={blog?.author?.avatar} 
-    alt={blog?.author?.name || "Author avatar"} 
-  />
-  <AvatarFallback className="bg-muted overflow-hidden">
-    {defaultIcon ? (
-      <img 
-        src={defaultIcon.src || defaultIcon} 
-        alt="Default logo" 
-        className="w-full h-full object-cover" 
-      />
-    ) : (
-      blog?.author?.name?.substring(0, 2).toUpperCase() || "AU"
-    )}
-  </AvatarFallback>
-</Avatar>
-              <span className="text-sm font-medium">{blog?.author?.name}</span>
+              <Avatar>
+                <AvatarImage
+                  src={blog?.author?.avatar}
+                  alt={blog?.author?.name || "Author avatar"}
+                />
+                <AvatarFallback className="bg-muted overflow-hidden">
+                  {defaultIcon ? (
+                    <img
+                      src={defaultIcon.src || defaultIcon}
+                      alt="Default logo"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    blog?.author?.name?.substring(0, 2).toUpperCase() || "AU"
+                  )}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium">{blog?.author?.name || "TechfoAnalyzer"}</span>
             </div>
-            
-              <MdVerified className="size-5 text-red-600" />
 
+            <MdVerified className="size-5 text-red-600" />
           </div>
 
           {/* Feature Image */}
           <div className="my-3 overflow-hidden rounded">
-            <img 
-              src={blog?.featureImage} 
-              alt={blog?.tittle || blog?.title || "Blog feature image"} 
-              className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105" 
+            <img
+              src={blog?.featureImage}
+              alt={blog?.tittle || blog?.title || "Blog feature image"}
+              className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 

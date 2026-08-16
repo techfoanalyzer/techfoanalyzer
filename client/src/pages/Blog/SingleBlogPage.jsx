@@ -4,13 +4,16 @@ import Comment from "@/components/common/Comment";
 import CommentCount from "@/components/common/CommentCount";
 import LikeCount from "@/components/common/LikeCount";
 import RelatedBlog from "@/components/common/RelatedBlog";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-light.css";
 import TextToSpeech from "@/components/common/TextToSpeech";
+import defaultIcon from "@/assets/images/logo.png";
+
+
 
 const SingleBlogPage = ({ blogData, related, category }) => {
   const contentRef = useRef(null);
@@ -160,11 +163,22 @@ useEffect(() => {
                         src={blogData?.blog?.author?.avatar}
                         alt={blogData?.blog?.author?.name || "Author Avatar"}
                       />
+                      <AvatarFallback className="bg-muted overflow-hidden">
+                          {defaultIcon ? (
+                            <img 
+                              src={defaultIcon.src || defaultIcon} 
+                              alt="Default logo" 
+                              className="w-full h-full object-cover" 
+                            />
+                          ) : (
+                            blog?.author?.name?.substring(0, 2).toUpperCase() || "AU"
+                          )}
+                        </AvatarFallback>
                     </Avatar>
                   </Link>
                   <div>
                     <p className="font-semibold text-sm sm:text-base leading-tight">
-                      {blogData?.blog?.author?.name}
+                      {blogData?.blog?.author?.name || "TechfoAnalyzer"}
                     </p>
                     <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                       {moment(blogData?.blog?.createdAt).format("DD MMMM YYYY")}
