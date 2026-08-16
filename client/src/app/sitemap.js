@@ -74,6 +74,12 @@ export default async function sitemap() {
       priority: 0.5,
     },
     {
+      url: `${siteUrl}/user-guide`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: `${siteUrl}/privacy-policy`,
       lastModified: new Date().toISOString(),
       changeFrequency: "monthly",
@@ -101,3 +107,4 @@ export default async function sitemap() {
 
   return [...staticUrls, ...categoryUrls, ...blogUrls];
 }
+
