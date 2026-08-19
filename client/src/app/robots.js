@@ -1,5 +1,5 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://techfoanalyzer.com";
+  const baseUrl = "https://www.techfoanalyzer.com";
 
   return {
     rules: [
@@ -13,6 +13,7 @@ export default function robots() {
           "/search", 
           "/users/", 
           "/comments/",
+          "/search", 
           "/sign-in", 
           "/sign-up", 
           "/profile", 

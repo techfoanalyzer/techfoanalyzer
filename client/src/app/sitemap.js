@@ -1,13 +1,17 @@
 // app/sitemap.js
 
 export default async function sitemap() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.techfoanalyzer.com";
+  const siteUrl = "https://www.techfoanalyzer.com";
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   let blogs = [];
   let categories = [];
 
   try {
+    if (!apiBaseUrl) {
+      throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
+    }
+
     const [blogsRes, categoriesRes] = await Promise.all([
       fetch(`${apiBaseUrl}/blog/blogs`, {
         next: { revalidate: 3600 },

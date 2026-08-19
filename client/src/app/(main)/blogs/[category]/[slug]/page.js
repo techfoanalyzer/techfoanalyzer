@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
     "Read the latest update on Techfo Analyzer.";
 
   const postUrl = `${SITE_URL}/blogs/${category ? `${category}/` : ""}${slug}`;
-  const imageUrl = blog?.featureImage || `${SITE_URL}/default-blog.jpg`;
+  const imageUrl = blog?.featureImage || `${SITE_URL}/og-home-banner.jpg`;
 
   return {
     title: {
@@ -118,7 +118,7 @@ const blogDetailPage = async ({ params }) => {
     headline: blog?.tittle,
     description: rawDescription,
    image: [
-    blog?.featureImage || `${SITE_URL}/default-blog.jpg`
+    blog?.featureImage || `${SITE_URL}/og-home-banner.jpg`
   ],
     datePublished: blog?.createdAt,
     dateModified: blog?.updatedAt || blog?.createdAt,

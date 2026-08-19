@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
   const categoryImg = 
     CategoryBlog?.categoryData?.featureImage || 
     CategoryBlog?.categoryData?.image || 
-    `${SITE_URL}/og-default.jpg`;
+    `${SITE_URL}/og-home-banner.jpg`;
 
   return {
     title: pageTitle,
