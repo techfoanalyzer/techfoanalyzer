@@ -1,5 +1,7 @@
 // app/sitemap.js
 
+export const revalidate = 60;
+
 export default async function sitemap() {
   const siteUrl = "https://www.techfoanalyzer.com";
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -14,10 +16,10 @@ export default async function sitemap() {
 
     const [blogsRes, categoriesRes] = await Promise.all([
       fetch(`${apiBaseUrl}/blog/blogs`, {
-        next: { revalidate: 3600 },
+        next: { revalidate: 60 },
       }),
       fetch(`${apiBaseUrl}/category/all-category`, {
-        next: { revalidate: 3600 },
+        next: { revalidate: 60 },
       }),
     ]);
 
