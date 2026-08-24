@@ -61,7 +61,9 @@ export const metadata = {
   verification: {
     google: "1FsZfeC4IAGJ1psSY3nvsD__rk-aHFmEYvoGnSPUZo8",
     yandex: "3b14d0c187a3a554",
-    bing: "CF3488EE22D586836FC42AC9A387885F",
+    other: {
+      "msvalidate.01": "CF3488EE22D586836FC42AC9A387885F",
+    },
   },
 };
 
