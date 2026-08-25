@@ -6,13 +6,13 @@ export const metadata = {
   description:
     "Get in touch with the TechfoAnalyzer team for inquiries, feedback, or collaboration opportunities.",
   alternates: {
-    canonical: "https://www.techfoanalyzer.com/contact",
+    canonical: "https://www.techfoanalyzer.com/contact-us",
   },
   openGraph: {
     title: "Contact Us | TechfoAnalyzer",
     description:
       "Get in touch with the TechfoAnalyzer team for inquiries, feedback, or collaboration opportunities.",
-    url: "https://www.techfoanalyzer.com/contact",
+    url: "https://www.techfoanalyzer.com/contact-us",
     type: "website",
   },
 };
