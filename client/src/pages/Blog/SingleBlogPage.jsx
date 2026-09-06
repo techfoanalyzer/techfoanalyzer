@@ -7,16 +7,107 @@ import RelatedBlog from "@/components/common/RelatedBlog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import moment from "moment";
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-light.css";
 import TextToSpeech from "@/components/common/TextToSpeech";
 import defaultIcon from "@/assets/images/logo.png";
+import { BookOpen, ChevronDown } from "lucide-react";
 
 
 
 const SingleBlogPage = ({ blogData, related, category }) => {
   const contentRef = useRef(null);
+  const [tableOfContents, setTableOfContents] = useState([]);
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    const headingTag = contentRef.current.querySelector("h2") ? "h2" : "h3";
+    const headings = Array.from(
+      contentRef.current.querySelectorAll(headingTag),
+    );
+    const usedIds = new Set();
+    const contents = headings.map((heading, index) => {
+      const baseId = heading.textContent
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || `section-${index + 1}`;
+      let id = baseId;
+      let suffix = 2;
+
+      while (usedIds.has(id)) {
+        id = `${baseId}-${suffix}`;
+        suffix += 1;
+      }
+
+      usedIds.add(id);
+      heading.id = id;
+      heading.style.scrollMarginTop = "6rem";
+
+      return {
+        id,
+        index,
+        title: heading.textContent.trim(),
+        tag: headingTag,
+      };
+    });
+
+    setTableOfContents(contents);
+  }, [blogData?.blog?.blogContent]);
+
+  const scrollToHeading = (event, headingId, headingIndex, headingTag) => {
+    event.preventDefault();
+
+    const heading = contentRef.current?.querySelectorAll(headingTag)[headingIndex];
+    if (!heading) return;
+
+    heading.id = headingId;
+
+    const topOffset = 88;
+    let scrollParent = heading.parentElement;
+
+    while (scrollParent && scrollParent !== document.body) {
+      const { overflowY } = window.getComputedStyle(scrollParent);
+      if (overflowY === "auto" || overflowY === "scroll") break;
+      scrollParent = scrollParent.parentElement;
+    }
+
+    if (!scrollParent || scrollParent === document.body) {
+      const headingPosition = heading.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: Math.max(headingPosition - topOffset, 0),
+        behavior: "auto",
+      });
+    } else {
+      const parentPosition = scrollParent.getBoundingClientRect().top;
+      const headingPosition = heading.getBoundingClientRect().top;
+
+      scrollParent.scrollTo({
+        top: Math.max(
+          scrollParent.scrollTop + headingPosition - parentPosition - topOffset,
+          0,
+        ),
+        behavior: "auto",
+      });
+    }
+
+    window.history.replaceState(null, "", `#${headingId}`);
+  };
+
+  const toggleTableOfContents = (event) => {
+    event.preventDefault();
+
+    const details = event.currentTarget.parentElement;
+    const currentScrollPosition = window.scrollY;
+    details.open = !details.open;
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, currentScrollPosition);
+    });
+  };
   
 
   // 1. Mobile & Narrow Viewport Pre-Scale Effect
@@ -203,6 +294,37 @@ useEffect(() => {
         title={blogData?.blog?.tittle} 
         textToRead={blogData?.blog?.blogContent} // Blog HTML/Markdown string
       />
+
+              {tableOfContents.length > 0 && (
+                <details className="group mb-6 overflow-hidden rounded-xl border border-border bg-muted/30 shadow-sm transition-shadow open:shadow-md">
+                  <summary onClick={toggleTableOfContents} className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 text-foreground transition-colors hover:bg-muted/70 [&::-webkit-details-marker]:hidden">
+                    <span className="flex min-w-0 items-center gap-2.5">
+                      <BookOpen className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                      <span className="font-semibold">In this blog</span>
+                      <span className="hidden text-xs font-medium text-muted-foreground group-open:inline">
+                        {tableOfContents.length} {tableOfContents.length === 1 ? "section" : "sections"}
+                      </span>
+                    </span>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <nav aria-label="Table of contents" className="border-t border-border bg-background/80 px-3 py-3">
+                    <ol className="space-y-0.5">
+                      {tableOfContents.map((item, index) => (
+                        <li key={item.id}>
+                          <button
+                            type="button"
+                            onClick={(event) => scrollToHeading(event, item.id, item.index, item.tag)}
+                            className="flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          >
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{index + 1}</span>
+                            <span className="min-w-0 flex-1 whitespace-normal break-words pt-0.5 leading-relaxed">{item.title}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                </details>
+              )}
 
               <div
                 ref={contentRef}

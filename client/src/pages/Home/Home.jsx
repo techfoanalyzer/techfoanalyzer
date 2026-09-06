@@ -4,12 +4,12 @@ import BlogCard from "@/components/common/BlogCard";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 const HomePage = ({ blogData }) => {
   // Mobile par 10, Laptop/Desktop par 50
   const [visibleCount, setVisibleCount] = useState(10);
   const [readersCount, setReadersCount] = useState(10420);
-  const [mounted, setMounted] = useState(false);
 
   // Live Counter Effect
   useEffect(() => {
@@ -22,10 +22,11 @@ const HomePage = ({ blogData }) => {
 
   // Safe Window Width Check
   useEffect(() => {
-    setMounted(true);
-    if (typeof window !== "undefined" && window.innerWidth >= 768) {
-      setVisibleCount(50);
-    }
+    const frameId = window.requestAnimationFrame(() => {
+      if (window.innerWidth >= 768) setVisibleCount(50);
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
   }, []);
 
   const blogs = blogData?.blog || [];
@@ -179,7 +180,7 @@ const HomePage = ({ blogData }) => {
                 </svg>
                 <span>
                   <strong className="font-semibold text-foreground font-mono transition-all">
-                    {mounted ? readersCount.toLocaleString() : "10,420"}
+                    {readersCount.toLocaleString()}
                   </strong>{" "}
                   Active Users
                 </span>
@@ -280,7 +281,7 @@ const HomePage = ({ blogData }) => {
               No Articles Found
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs leading-relaxed">
-              We couldn't find any content here at the moment.
+              We couldn&apos;t find any content here at the moment.
             </p>
           </div>
         )}
@@ -288,7 +289,7 @@ const HomePage = ({ blogData }) => {
 
       {/* See More Button */}
       {blogs.length > 0 && visibleCount < blogs.length && (
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-10">
           <Button
             onClick={() =>
               setVisibleCount(
@@ -296,8 +297,10 @@ const HomePage = ({ blogData }) => {
               )
             }
             variant="outline"
+            className="group h-11 min-w-36 rounded-full border-red-500/40 bg-background px-6 font-semibold text-red-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-500 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-500/20"
           >
-            See More
+            <span>See More</span>
+            <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5" aria-hidden="true" />
           </Button>
         </div>
       )}
