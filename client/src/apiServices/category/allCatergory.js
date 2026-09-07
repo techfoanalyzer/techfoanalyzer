@@ -3,7 +3,7 @@ export async function getCategory() {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/all-category`,
       {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
         credentials: "include", 
       }
     );
@@ -23,7 +23,7 @@ export async function getBlogByCategory(category) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/get-blog-by-category/${category}`,
       {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
       }
     );
 

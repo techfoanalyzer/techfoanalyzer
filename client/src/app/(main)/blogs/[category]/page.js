@@ -2,7 +2,7 @@ import { getBlogByCategory } from '@/apiServices/category/allCatergory';
 import CategoryBlogDetails from '@/pages/Category/CategoryBlogDetails';
 import { notFound } from 'next/navigation';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.techfoanalyzer.com';

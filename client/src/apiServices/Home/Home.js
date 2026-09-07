@@ -4,7 +4,7 @@ export async function HomeData() {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/blogs`,
       {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
         credentials: "include", 
       }
     );

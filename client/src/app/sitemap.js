@@ -1,6 +1,6 @@
 // app/sitemap.js
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export default async function sitemap() {
   const siteUrl = "https://www.techfoanalyzer.com";
@@ -16,10 +16,10 @@ export default async function sitemap() {
 
     const [blogsRes, categoriesRes] = await Promise.all([
       fetch(`${apiBaseUrl}/blog/blogs`, {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
       }),
       fetch(`${apiBaseUrl}/category/all-category`, {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
       }),
     ]);
 

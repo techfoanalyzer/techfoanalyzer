@@ -3,7 +3,7 @@ export async function BlogPage(slug) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/get-blog/${slug}`,
       {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
       }
     );
 
@@ -26,7 +26,7 @@ export async function RelatedBlog(category, slug) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/blog/get-related-blog/${category}/${slug}`,
       {
-        next: { revalidate: 60 },
+        next: { revalidate: 3600 },
       }
     );
 
