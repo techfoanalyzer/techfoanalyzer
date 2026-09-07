@@ -130,6 +130,7 @@ const HomePage = ({ blogData }) => {
                 Trending:
               </span>
               {[
+                { name: "#Tech-News", slug: "tech-news" },
                 { name: "#WebDev", slug: "web-development" },
                 { name: "#Cyber Security", slug: "cyber-security" },
                 { name: "#AppDev", slug: "app-development" },
