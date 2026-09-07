@@ -1,6 +1,7 @@
 import { GlobalToastContainer } from "@/helper/showToast";
 import "./globals.css";
 import { Nunito } from "next/font/google";
+import Script from "next/script";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -73,6 +74,10 @@ export default function RootLayout({ children }) {
       <body>
         {children}
         <GlobalToastContainer />
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2330353177430108"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );
