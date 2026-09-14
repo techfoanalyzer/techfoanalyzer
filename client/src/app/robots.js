@@ -18,6 +18,7 @@ export default function robots() {
           "/sign-up", 
           "/profile", 
           "/forget-password",
+          "/bookstore/",
         ],
       },
     ],

@@ -24,6 +24,8 @@ import { FaRegUser } from "react-icons/fa";
 import { LuBookOpen, LuInfo, LuMail } from "react-icons/lu";
 import { useUserStore } from "@/store/userStore";
 import { PiBookmarksFill } from "react-icons/pi";
+import { LuBookOpenText } from "react-icons/lu";
+import { LiaBookOpenSolid } from "react-icons/lia";
 
 const Appsidebar = ({ categoryData }) => {
   const { user, isLoggedIn, isHydrated } = useUserStore();
@@ -75,6 +77,21 @@ const Appsidebar = ({ categoryData }) => {
               </Link>
             </SidebarMenuItem>
 
+            {/* Bookstore */}
+            {/* <SidebarMenuItem>
+              <Link href="/shop" onClick={handleLinkClick} className="w-full">
+                <SidebarMenuButton className="relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
+                  <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
+                    <LuBookOpenText className="text-lg" />
+                  </div>
+
+                  <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">
+                    Bookshop
+                  </span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem> */}
+
             {/* Categories (Only Admin) */}
             {isHydrated &&
               (user?.role === "admin" || user?.user?.role === "admin") && (
@@ -111,6 +128,48 @@ const Appsidebar = ({ categoryData }) => {
                       </div>
                       <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">
                         Blogs
+                      </span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              )}
+
+            {/* Bookstore (Only Admin) */}
+            {isHydrated &&
+              (user?.role === "admin" || user?.user?.role === "admin") && (
+                <SidebarMenuItem>
+                  <Link
+                    href="/bookstore"
+                    onClick={handleLinkClick}
+                    className="w-full"
+                  >
+                    <SidebarMenuButton className="relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
+                      <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
+                        <LuBookOpenText className="text-lg" />
+                      </div>
+                      <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">
+                        Bookstore Category
+                      </span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              )}
+
+            {/* Books (Only Admin) */}
+            {isHydrated &&
+              (user?.role === "admin" || user?.user?.role === "admin") && (
+                <SidebarMenuItem>
+                  <Link
+                    href="/bookstore/books"
+                    onClick={handleLinkClick}
+                    className="w-full"
+                  >
+                    <SidebarMenuButton className="relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-900 transition-all duration-200 group overflow-hidden before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:bg-red-500 before:rounded-r-full before:opacity-0 hover:before:opacity-100 before:transition-all">
+                      <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-200 shadow-xs">
+                        <LiaBookOpenSolid className="text-lg" />
+                      </div>
+                      <span className="font-medium text-sm group-hover:translate-x-0.5 transition-transform">
+                        Books
                       </span>
                     </SidebarMenuButton>
                   </Link>
@@ -174,7 +233,7 @@ const Appsidebar = ({ categoryData }) => {
               )}
 
             {/* Profile (Logged-in User & Admin) */}
-            {isHydrated && isLoggedIn && (
+            {/* {isHydrated && isLoggedIn && (
               <SidebarMenuItem>
                 <Link
                   href="/profile"
@@ -191,7 +250,7 @@ const Appsidebar = ({ categoryData }) => {
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
-            )}
+            )} */}
 
             {/* Contact Us */}
             <SidebarMenuItem>

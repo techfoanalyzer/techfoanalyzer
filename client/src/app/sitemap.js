@@ -8,17 +8,30 @@ export default async function sitemap() {
 
   let blogs = [];
   let categories = [];
+  let bookCategories = [];
+  let books = [];
 
   try {
     if (!apiBaseUrl) {
       throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
     }
 
-    const [blogsRes, categoriesRes] = await Promise.all([
+    const [
+      blogsRes,
+      categoriesRes,
+      bookCategoriesRes,
+      booksRes,
+    ] = await Promise.all([
       fetch(`${apiBaseUrl}/blog/blogs`, {
         next: { revalidate: 3600 },
       }),
       fetch(`${apiBaseUrl}/category/all-category`, {
+        next: { revalidate: 3600 },
+      }),
+      fetch(`${apiBaseUrl}/book-category/all-category`, {
+        next: { revalidate: 3600 },
+      }),
+      fetch(`${apiBaseUrl}/book/get-all`, {
         next: { revalidate: 3600 },
       }),
     ]);
@@ -32,20 +45,30 @@ export default async function sitemap() {
       const categoryData = await categoriesRes.json();
       categories = categoryData?.categories || [];
     }
+
+    if (bookCategoriesRes.ok) {
+      const bookCategoryData = await bookCategoriesRes.json();
+      bookCategories = bookCategoryData?.categories || [];
+    }
+
+    if (booksRes.ok) {
+      const bookData = await booksRes.json();
+      books = bookData?.books || [];
+    }
   } catch (error) {
     console.error("Error fetching data for sitemap:", error);
   }
 
- 
   const safeDate = (dateStr) => {
     try {
-      return dateStr ? new Date(dateStr).toISOString() : new Date().toISOString();
+      return dateStr
+        ? new Date(dateStr).toISOString()
+        : new Date().toISOString();
     } catch {
       return new Date().toISOString();
     }
   };
 
- 
   const blogUrls = blogs.map((item) => {
     const categorySlug = item.category?.slug || "general";
 
@@ -57,15 +80,27 @@ export default async function sitemap() {
     };
   });
 
-
   const categoryUrls = categories.map((cat) => ({
-    url: `${siteUrl}/blogs/${cat.slug}`, 
+    url: `${siteUrl}/blogs/${cat.slug}`,
     lastModified: safeDate(cat.updatedAt || cat.createdAt),
     changeFrequency: "weekly",
     priority: 0.7,
   }));
 
- 
+  const bookCategoryUrls = bookCategories.map((category) => ({
+    url: `${siteUrl}/shop/${category.slug}`,
+    lastModified: safeDate(category.updatedAt || category.createdAt),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  const bookUrls = books.map((book) => ({
+    url: `${siteUrl}/shop/book/${book._id}`,
+    lastModified: safeDate(book.updatedAt || book.createdAt),
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
   const staticUrls = [
     {
       url: `${siteUrl}`,
@@ -109,8 +144,19 @@ export default async function sitemap() {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: `${siteUrl}/shop`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
   ];
 
-  return [...staticUrls, ...categoryUrls, ...blogUrls];
+  return [
+    ...staticUrls,
+    ...categoryUrls,
+    ...blogUrls,
+    ...bookCategoryUrls,
+    ...bookUrls,
+  ];
 }
-
